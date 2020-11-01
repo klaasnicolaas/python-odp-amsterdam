@@ -11,12 +11,12 @@ class AmsterdamCase:
     NAME = "Garages Amsterdam"
 
     id: str
-    garageName: str
+    garage_name: str
     state: str
-    freeSpaceShort: int
-    freeSpaceLong: int
-    shortCapacity: int
-    longCapacity: int
+    free_space_short: int
+    free_space_long: int
+    short_capacity: int
+    long_capacity: int
 
     @staticmethod
     def from_json(item):
@@ -24,17 +24,17 @@ class AmsterdamCase:
         id = item
         return AmsterdamCase(
             id=id["Id"],
-            garageName=correctName(attrs["Name"]),
+            garage_name=correct_name(attrs["Name"]),
             state=attrs["State"],
-            freeSpaceShort=attrs["FreeSpaceShort"],
-            freeSpaceLong=attrs["FreeSpaceLong"],
-            shortCapacity=attrs["ShortCapacity"],
-            longCapacity=attrs["LongCapacity"],
+            free_space_short=attrs["FreeSpaceShort"],
+            free_space_long=attrs["FreeSpaceLong"],
+            short_capacity=attrs["ShortCapacity"],
+            long_capacity=attrs["LongCapacity"],
         )
 
 DEFAULT_SOURCE = AmsterdamCase
 
-def correctName(name):
+def correct_name(name):
     """Change parking garage name for consistency if needed."""
     filter = ["CE-","ZD-","ZO-","ZU-"]
     corrections = ["P1 ", "P3 "]
