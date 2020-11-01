@@ -39,6 +39,6 @@ setup(
     name="garagesamsterdam",
     packages=find_packages(include=["garagesamsterdam"]),
     url="https://github.com/klaasnicolaas/garagesamsterdam",
-    version="1.0.0",
+    version="1.0.1",
     zip_safe=False,
 )

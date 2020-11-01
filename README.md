@@ -1,1 +1,1 @@
-## Python API fetching latest parkinggarages numbers in Amsterdam.
+## Python API fetching garage occupancy in Amsterdam (The Netherlands).
