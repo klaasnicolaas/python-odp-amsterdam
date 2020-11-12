@@ -36,9 +36,9 @@ setup(
     license="MIT license",
     long_description_content_type="text/markdown",
     long_description=readme,
-    name="garagesamsterdam",
-    packages=find_packages(include=["garagesamsterdam"]),
-    url="https://github.com/klaasnicolaas/garagesamsterdam",
-    version="1.0.2",
+    name="garages_amsterdam",
+    packages=find_packages(include=["garages_amsterdam"]),
+    url="https://github.com/klaasnicolaas/garages_amsterdam",
+    version="1.1.0",
     zip_safe=False,
 )
