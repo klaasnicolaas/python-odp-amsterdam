@@ -48,7 +48,7 @@ def correct_name(name):
     else:
         return name
 
-async def get_cases(session: ClientSession, *, source=DEFAULT_SOURCE):
+async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
     """Fetch parking garage data."""
     resp = await session.get(source.URL)
     data = await resp.json(content_type=None)
