@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 class AmsterdamCase:
     """Class for garages Amsterdam"""
 
-    URL = "http://opd.it-t.com/data/amsterdam/ParkingLocation.json"
+    URL = "http://opd.it-t.nl/data/amsterdam/ParkingLocation.json"
     NAME = "Garages Amsterdam"
 
     id: str
