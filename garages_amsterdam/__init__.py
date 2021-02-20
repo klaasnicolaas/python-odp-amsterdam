@@ -36,15 +36,16 @@ DEFAULT_SOURCE = AmsterdamCase
 
 def correct_name(name):
     """Change parking garage name for consistency if needed."""
-    filter = ["CE-","ZD-","ZO-","ZU-"]
+    filter = ["CE-","ZD-","ZO-","ZU-","FJ212P34 "]
     corrections = ["P1 ", "P3 "]
+    
+    for value in filter:
+        """Remove parts from name string."""
+        name = name.replace(value, '')
 
-    if any(x in name for x in filter):
-        name = name[3:]
-        if any(y in name for y in corrections):
-            return name[:1] + '0' + name[1:]
-        else:
-            return name
+    if any(y in name for y in corrections):
+        """Add a 0 for consistency."""
+        return name[:1] + '0' + name[1:]
     else:
         return name
 
@@ -65,12 +66,6 @@ async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
     results = []
     wrongKeys = ['FP','Fiets']
 
-    # results = [
-    #     source.from_json(item)
-    #     for item in data["features"]
-    #     if not any(x in item["properties"]["Name"] for x in wrongKeys)
-    # ]
-
     for item in data["features"]:
         try:
             if not any(x in item["properties"]["Name"] for x in wrongKeys):
@@ -78,5 +73,4 @@ async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
         except KeyError:
             logging.getLogger(__name__).warning("Got wrong data: %s", item)
 
-    # print(results)
     return results
