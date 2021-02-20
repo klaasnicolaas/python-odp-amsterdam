@@ -1,7 +1,13 @@
 """Fetch latest parking garage information from Amsterdam."""
-from aiohttp import ClientSession, ClientResponseError
+from aiohttp import ClientSession
 from dataclasses import dataclass
+from .import errors
+
 import logging
+import aiohttp
+import asyncio
+
+_LOGGER = logging.getLogger(__name__)
 
 @dataclass
 class AmsterdamCase:
@@ -51,17 +57,22 @@ def correct_name(name):
 
 async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
     """Fetch parking garage data."""
-    resp = await session.get(source.URL)
-    data = await resp.json(content_type=None)
+    try:
+        resp = await session.get(source.URL)
+    except aiohttp.ClientConnectionError as err:
+        _LOGGER.debug("Failed to connect")
+        errors.raise_error(err, 1)
+    except aiohttp.InvalidURL as err:
+        _LOGGER.debug("Could not connect, API url is incorrect")
+        errors.raise_error(err, 1)
+    except aiohttp.ClientResponseError as err:
+        _LOGGER.debug("Caught response error: %s", err)
+        errors.raise_error(err, 2)
+    except (aiohttp.ClientError, asyncio.TimeoutError) as err:
+        _LOGGER.debug("Unknown error occurred")
+        errors.raise_error(err, 3)
 
-    if 'error' in data:
-        raise ClientResponseError(
-            resp.request_info,
-            resp.history,
-            status=data['error']['code'],
-            message=data['error']['message'],
-            headers=resp.headers
-        )
+    data = await resp.json(content_type=None)
 
     results = []
     wrongKeys = ['FP','Fiets']
@@ -72,5 +83,4 @@ async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
                 results.append(source.from_json(item))
         except KeyError:
             logging.getLogger(__name__).warning("Got wrong data: %s", item)
-
     return results
