@@ -39,6 +39,6 @@ setup(
     name="garages_amsterdam",
     packages=find_packages(include=["garages_amsterdam"]),
     url="https://github.com/klaasnicolaas/garages_amsterdam",
-    version="2.0.1",
+    version=os.environ.get('PACKAGE_VERSION'),
     zip_safe=False,
 )
