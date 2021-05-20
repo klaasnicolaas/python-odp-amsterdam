@@ -36,7 +36,7 @@ DEFAULT_SOURCE = AmsterdamCase
 
 def correct_name(name):
     """Change parking garage name for consistency if needed."""
-    filter = ["CE-","ZD-","ZO-","ZU-","FJ212P34 "]
+    filter = ["CE-","ZD-","ZO-","ZU-","FJ212P34 ","VRN-FJ212"]
     corrections = ["P1 ", "P3 "]
     
     for value in filter:
