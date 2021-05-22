@@ -17,10 +17,13 @@ class AmsterdamCase:
     free_space_long: int
     short_capacity: int
     long_capacity: int
+    longitude: float
+    latitude: float
 
     @staticmethod
     def from_json(item):
         attrs = item["properties"]
+        point = item["geometry"]["coordinates"]
         id = item
         return AmsterdamCase(
             id=id["Id"],
@@ -30,9 +33,21 @@ class AmsterdamCase:
             free_space_long=attrs["FreeSpaceLong"],
             short_capacity=attrs["ShortCapacity"],
             long_capacity=attrs["LongCapacity"],
+            longitude=split_coordinates("lon", str(point)),
+            latitude=split_coordinates("lat", str(point)),
         )
 
 DEFAULT_SOURCE = AmsterdamCase
+
+def split_coordinates(type, data):
+    """Split the coordinate data in separate variables."""
+    longitude,latitude = data.split(', ')
+    longitude = longitude.replace('[', '')
+    latitude = latitude.replace(']', '')
+    if type == "lon":
+        return longitude
+    elif type == "lat":
+        return latitude
 
 def correct_name(name):
     """Change parking garage name for consistency if needed."""
