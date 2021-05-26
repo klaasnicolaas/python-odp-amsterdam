@@ -51,7 +51,7 @@ def split_coordinates(type, data):
 
 def correct_name(name):
     """Change parking garage name for consistency if needed."""
-    filter = ["CE-","ZD-","ZO-","ZU-","FJ212P34 ","VRN-FJ212"]
+    filter = ["CE-","ZD-","ZO-","ZU-","FJ212P34 ","VRN-FJ212","GRV020HNK "]
     corrections = ["P1 ", "P3 "]
     
     for value in filter:
@@ -84,6 +84,7 @@ async def get_garages(session: ClientSession, *, source=DEFAULT_SOURCE):
     for item in data["features"]:
         try:
             if not any(x in item["properties"]["Name"] for x in wrongKeys):
+                """Items with wrong keys are remove from the data list."""
                 results.append(source.from_json(item))
         except KeyError:
             logging.getLogger(__name__).warning("Got wrong data: %s", item)
