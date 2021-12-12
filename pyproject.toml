@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 packages = [
-    { include = "garages_amsterdam", from = "src" }
+    { include = "garages_amsterdam" }
 ]
 
 [tool.poetry.dependencies]
@@ -117,7 +117,7 @@ addopts = "--cov"
 
 [tool.vulture]
 min_confidence = 80
-paths = ["garagesamsterdam"]
+paths = ["garages_amsterdam"]
 verbose = true
 
 [build-system]
