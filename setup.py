@@ -1,19 +1,27 @@
 #!/usr/bin/env python
-"""The setup script"""
+"""The setup script."""
 import os
-import re
 import sys
 
 from setuptools import find_packages, setup
 
+
 def read(*parts):
-    """Read file."""
+    """Read file.
+
+    Args:
+        *parts: Path to file.
+
+    Returns:
+        File contents.
+    """
     filename = os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts)
     sys.stdout.write(filename)
-    with open(filename, encoding="utf-8", mode="rt") as fp:
+    with open(filename, encoding="utf-8") as fp:
         return fp.read()
 
-with open("README.md") as readme_file:
+
+with open("README.md", encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
 setup(
@@ -39,6 +47,6 @@ setup(
     name="garages_amsterdam",
     packages=find_packages(include=["garages_amsterdam"]),
     url="https://github.com/klaasnicolaas/garages_amsterdam",
-    version=os.environ.get('PACKAGE_VERSION'),
+    version=os.environ.get("PACKAGE_VERSION"),
     zip_safe=False,
 )
