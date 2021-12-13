@@ -9,10 +9,10 @@ from garages_amsterdam import Garage, GaragesAmsterdam
 async def main():
     """Show example on using the Garage Amsterdam API client."""
     async with GaragesAmsterdam() as client:
-        garage: Garage = await client.all_garages()
+        garages: Garage = await client.all_garages()
         count: int
 
-        for index, item in enumerate(garage, 1):
+        for index, item in enumerate(garages, 1):
             count = index
             print(item)
         print(f"{count} parkeergarages gevonden")
