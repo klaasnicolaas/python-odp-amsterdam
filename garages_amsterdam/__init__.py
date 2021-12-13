@@ -2,11 +2,11 @@
 
 from .exceptions import GaragesAmsterdamConnectionError, GaragesAmsterdamError
 from .garages_amsterdam import GaragesAmsterdam
-from .models import Garages
+from .models import Garage
 
 __all__ = [
     "GaragesAmsterdam",
-    "Garages",
+    "Garage",
     "GaragesAmsterdamError",
     "GaragesAmsterdamConnectionError",
 ]

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -10,8 +11,9 @@ from aiohttp.client import ClientError, ClientResponseError, ClientSession
 from async_timeout import timeout
 from yarl import URL
 
+from .const import WRONGKEYS
 from .exceptions import GaragesAmsterdamConnectionError, GaragesAmsterdamError
-from .models import Garages
+from .models import Garage
 
 
 @dataclass
@@ -50,9 +52,9 @@ class GaragesAmsterdam:
 
         Raises:
             GaragesAmsterdamConnectionError: An error occurred while
-                communicating with the CEMM device.
+                communicating with the Garages Amsterdam API.
             GaragesAmsterdamError: Received an unexpected response from
-                the CEMM device.
+                the Garages Amsterdam API.
         """
         url = URL("http://opd.it-t.nl/data/amsterdam/").join(URL(uri))
 
@@ -92,14 +94,27 @@ class GaragesAmsterdam:
 
         return await response.text()
 
-    async def garages(self) -> Garages:
+    async def all_garages(self) -> list[Garage]:
         """Get all the garages.
 
         Returns:
-            A Garages data object from the Garages Amsterdam API.
+            A list of Garage objects.
+
+        Raises:
+            GaragesAmsterdamError: If the data is not valid.
         """
+        results = []
+
         data = await self.request("ParkingLocation.json")
-        return Garages.from_json(data)
+        data = json.loads(data)
+
+        for item in data["features"]:
+            try:
+                if not any(x in item["properties"]["Name"] for x in WRONGKEYS):
+                    results.append(Garage.from_json(item))
+            except KeyError as exception:
+                raise GaragesAmsterdamError(f"Got wrong data: {item}") from exception
+        return results
 
     async def close(self) -> None:
         """Close open client session."""

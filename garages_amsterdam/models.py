@@ -1,16 +1,13 @@
 """Models for Garages Amsterdam."""
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
-from typing import Any
 
-from .const import CORRECTIONS, FILTER, WRONGKEYS
-from .exceptions import GaragesAmsterdamError
+from .const import CORRECTIONS, FILTER
 
 
 @dataclass
-class Garages:
+class Garage:
     """Object representing an Garage model response from the API."""
 
     garage_id: str
@@ -23,8 +20,8 @@ class Garages:
     longitude: float
     latitude: float
 
-    @staticmethod
-    def from_json(data: dict[str, Any]) -> Garages:
+    @classmethod
+    def from_json(cls, data: dict) -> Garage:
         """Return Garages object from the Garages Amsterdam API.
 
         Args:
@@ -32,36 +29,20 @@ class Garages:
 
         Returns:
             An Garages object.
-
-        Raises:
-            GaragesAmsterdamError: If the data is not valid.
         """
+        latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
 
-        data = json.loads(data)
-        results = []
-
-        for item in data["features"]:
-            try:
-                if not any(x in item["properties"]["Name"] for x in WRONGKEYS):
-                    latitude, longitude = split_coordinates(
-                        str(item["geometry"]["coordinates"])
-                    )
-                    results.append(
-                        Garages(
-                            garage_id=item["Id"],
-                            garage_name=correct_name(item["properties"]["Name"]),
-                            state=item["properties"]["State"],
-                            free_space_short=item["properties"]["FreeSpaceShort"],
-                            free_space_long=item["properties"]["FreeSpaceLong"],
-                            short_capacity=item["properties"]["ShortCapacity"],
-                            long_capacity=item["properties"]["LongCapacity"],
-                            longitude=longitude,
-                            latitude=latitude,
-                        )
-                    )
-            except KeyError as exception:
-                raise GaragesAmsterdamError(f"Got wrong data: {item}") from exception
-        return results
+        return cls(
+            garage_id=data["Id"],
+            garage_name=correct_name(data["properties"]["Name"]),
+            state=data["properties"]["State"],
+            free_space_short=data["properties"]["FreeSpaceShort"],
+            free_space_long=data["properties"]["FreeSpaceLong"],
+            short_capacity=data["properties"]["ShortCapacity"],
+            long_capacity=data["properties"]["LongCapacity"],
+            longitude=longitude,
+            latitude=latitude,
+        )
 
 
 def split_coordinates(data):
