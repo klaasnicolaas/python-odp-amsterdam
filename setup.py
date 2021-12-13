@@ -32,8 +32,8 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
@@ -47,6 +47,6 @@ setup(
     name="garages_amsterdam",
     packages=find_packages(include=["garages_amsterdam"]),
     url="https://github.com/klaasnicolaas/garages_amsterdam",
-    version=os.environ.get("PACKAGE_VERSION"),
+    version="3.0.0",
     zip_safe=False,
 )
