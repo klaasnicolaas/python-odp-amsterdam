@@ -43,7 +43,7 @@ from garages_amsterdam import GaragesAmsterdam
 async def main():
     """Show example on using the Garage Amsterdam API client."""
     async with GaragesAmsterdam() as client:
-        garages: Garages = await client.garages()
+        garages: Garages = await client.all_garages()
         print(garages)
 
 
