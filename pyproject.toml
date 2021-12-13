@@ -67,7 +67,7 @@ Changelog = "https://github.com/klaasnicolaas/python-garages-amsterdam/releases"
 target-version = ['py38']
 
 [tool.coverage.paths]
-source = ["src"]
+source = ["garages_amsterdam"]
 
 [tool.coverage.report]
 show_missing = true

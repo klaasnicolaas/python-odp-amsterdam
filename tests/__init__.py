@@ -1,4 +1,4 @@
-"""Asynchronous Python client for the Omnik Inverter device."""
+"""Asynchronous Python client for the Garages Amsterdam API."""
 import os
 
 
