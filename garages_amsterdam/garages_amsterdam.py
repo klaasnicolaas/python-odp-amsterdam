@@ -94,7 +94,7 @@ class GaragesAmsterdam:
 
         return await response.text()
 
-    async def all_garages(self) -> Garage:
+    async def all_garages(self) -> list[Garage]:
         """Get all the garages.
 
         Returns:
