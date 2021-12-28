@@ -141,8 +141,8 @@ SOFTWARE.
 [code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/klaasnicolaas/python-garages-amsterdam.svg?logo=lgtm&logoWidth=18
 [code-quality]: https://lgtm.com/projects/g/klaasnicolaas/python-garages-amsterdam/context:python
 [commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/python-garages-amsterdam.svg
-[commits-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/commits/master
-[codecov-shield]: https://codecov.io/gh/klaasnicolaas/python-garages-amsterdam/branch/master/graph/badge.svg?token=F6CE1S25NV
+[commits-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/commits/main
+[codecov-shield]: https://codecov.io/gh/klaasnicolaas/python-garages-amsterdam/branch/main/graph/badge.svg?token=F6CE1S25NV
 [codecov-url]: https://codecov.io/gh/klaasnicolaas/python-garages-amsterdam
 [forks-shield]: https://img.shields.io/github/forks/klaasnicolaas/python-garages-amsterdam.svg
 [forks-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/network/members
