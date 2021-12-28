@@ -1,4 +1,5 @@
 """Basic tests for the Garages Amsterdam API."""
+# pylint: disable=protected-access
 from unittest.mock import patch
 
 import aiohttp
@@ -16,4 +17,4 @@ async def test_client_error():
         with patch.object(
             session, "request", side_effect=aiohttp.ClientError
         ), pytest.raises(GaragesAmsterdamConnectionError):
-            assert await client.request("test")
+            assert await client._request("test")
