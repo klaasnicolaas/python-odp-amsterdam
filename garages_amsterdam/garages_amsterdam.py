@@ -5,10 +5,12 @@ import asyncio
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
+from importlib import metadata
 from typing import Any
 
+import async_timeout
 from aiohttp.client import ClientError, ClientResponseError, ClientSession
-from async_timeout import timeout
+from aiohttp.hdrs import METH_GET
 from yarl import URL
 
 from .const import WRONGKEYS
@@ -20,30 +22,23 @@ from .models import Garage
 class GaragesAmsterdam:
     """Main class for handling connection with Garages Amsterdam API."""
 
-    def __init__(
-        self, request_timeout: int = 10, session: ClientSession | None = None
-    ) -> None:
-        """Initialize connection with the Garages Amsterdam API.
+    request_timeout: float = 10.0
+    session: ClientSession | None = None
 
-        Args:
-            request_timeout: An integer with the request timeout in seconds.
-            session: Optional, shared, aiohttp client session.
-        """
-        self._session = session
-        self._close_session: bool = False
+    _close_session: bool = False
 
-        self.request_timeout = request_timeout
-
-    async def request(
+    async def _request(
         self,
         uri: str,
         *,
+        method: str = METH_GET,
         params: Mapping[str, str] | None = None,
     ) -> dict[str, Any]:
         """Handle a request to the Garages Amsterdam API.
 
         Args:
             uri: Request URI, without '/', for example, 'status'
+            method: HTTP method to use, for example, 'GET'
             params: Extra options to improve or limit the response.
 
         Returns:
@@ -56,23 +51,28 @@ class GaragesAmsterdam:
             GaragesAmsterdamError: Received an unexpected response from
                 the Garages Amsterdam API.
         """
-        url = URL("http://opd.it-t.nl/data/amsterdam/").join(URL(uri))
+        version = metadata.version(__package__)
+        url = URL.build(
+            scheme="http", host="opd.it-t.nl", path="/data/amsterdam/"
+        ).join(URL(uri))
 
         headers = {
-            "Accept": "application/json, text/plain, */*",
+            "Accept": "application/json, text/plain",
+            "User-Agent": f"PythonGaragesAmsterdam/{version}",
         }
 
-        if self._session is None:
-            self._session = ClientSession()
+        if self.session is None:
+            self.session = ClientSession()
             self._close_session = True
 
         try:
-            async with timeout(self.request_timeout):
-                response = await self._session.request(
-                    "GET",
+            async with async_timeout.timeout(self.request_timeout):
+                response = await self.session.request(
+                    method,
                     url,
                     params=params,
                     headers=headers,
+                    ssl=False,
                 )
                 response.raise_for_status()
         except asyncio.TimeoutError as exception:
@@ -105,7 +105,7 @@ class GaragesAmsterdam:
         """
         results = []
 
-        data = await self.request("ParkingLocation.json")
+        data = await self._request("ParkingLocation.json")
         data = json.loads(data)
 
         for item in data["features"]:
@@ -118,8 +118,8 @@ class GaragesAmsterdam:
 
     async def close(self) -> None:
         """Close open client session."""
-        if self._session and self._close_session:
-            await self._session.close()
+        if self.session and self._close_session:
+            await self.session.close()
 
     async def __aenter__(self) -> GaragesAmsterdam:
         """Async enter.
