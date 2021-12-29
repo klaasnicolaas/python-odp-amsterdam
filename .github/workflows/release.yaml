@@ -4,12 +4,11 @@ name: Release
 # yamllint disable-line rule:truthy
 on:
   release:
-    types:
-      - published
+    types: [published]
 
 jobs:
   release:
-    name: Releasing to PyPi
+    name: 🚀 Releasing to PyPi
     runs-on: ubuntu-latest
     steps:
       - name: ⤵️ Check out code from GitHub
