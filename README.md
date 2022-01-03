@@ -65,6 +65,16 @@ You can read the following data with this package:
 - Longitude
 - Latitude
 
+## Contributing
+
+This is an active open-source project. We are always open to people who want to
+use the code or contribute to it.
+
+We've set up a separate document for our
+[contribution guidelines](CONTRIBUTING.md).
+
+Thank you for being involved! :heart_eyes:
+
 ## Setting up development environment
 
 This Python project is fully managed using the [Poetry][poetry] dependency
@@ -115,7 +125,7 @@ poetry run pytest
 
 MIT License
 
-Copyright (c) 2021 Klaas Schoute
+Copyright (c) 2022 Klaas Schoute
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -150,7 +160,7 @@ SOFTWARE.
 [issues-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/issues
 [license-shield]: https://img.shields.io/github/license/klaasnicolaas/python-garages-amsterdam.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/python-garages-amsterdam.svg
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
 [maintainability-shield]: https://api.codeclimate.com/v1/badges/72d6baa9151bb0b0cfdf/maintainability
 [maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-garages-amsterdam/maintainability
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
