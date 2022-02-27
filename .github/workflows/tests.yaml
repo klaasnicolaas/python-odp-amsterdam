@@ -10,8 +10,8 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ubuntu, windows, macos]
-        python: ["3.8", "3.9", "3.10"]
+        os: [ubuntu, macos]
+        python: ["3.9", "3.10"]
     steps:
       - name: ⤵️ Check out code from GitHub
         uses: actions/checkout@v2.4.0
@@ -62,11 +62,11 @@ jobs:
         uses: actions/checkout@v2.4.0
       - name: ⬇️ Download coverage data
         uses: actions/download-artifact@v2.1.0
-      - name: 🏗 Set up Python 3.8
+      - name: 🏗 Set up Python 3.9
         id: python
         uses: actions/setup-python@v2.3.2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: 🏗 Get pip cache dir
         id: pip-cache
         run: |
