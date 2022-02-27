@@ -6,10 +6,10 @@ import asyncio
 from garages_amsterdam import Garage, GaragesAmsterdam
 
 
-async def main():
+async def main() -> None:
     """Show example on using the Garage Amsterdam API client."""
     async with GaragesAmsterdam() as client:
-        garages: Garage = await client.all_garages()
+        garages: list[Garage] = await client.all_garages()
         count: int
 
         for index, item in enumerate(garages, 1):

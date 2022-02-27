@@ -1,11 +1,11 @@
 """Asynchronous Python client for the Garages Amsterdam API."""
 
-WRONGKEYS: list = [
+WRONGKEYS: list[str] = [
     "FP",
     "Fiets",
 ]
 
-FILTER: list = [
+FILTER: list[str] = [
     "CE-",
     "ZD-",
     "ZO-",
@@ -15,7 +15,7 @@ FILTER: list = [
     "GRV020HNK ",
 ]
 
-CORRECTIONS: list = [
+CORRECTIONS: list[str] = [
     "P1 ",
     "P3 ",
 ]
