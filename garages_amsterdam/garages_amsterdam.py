@@ -32,7 +32,7 @@ class GaragesAmsterdam:
         uri: str,
         *,
         method: str = METH_GET,
-        params: Mapping[str, str] | None = None,
+        params: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Handle a request to the Garages Amsterdam API.
 
@@ -92,7 +92,9 @@ class GaragesAmsterdam:
                 {"Content-Type": content_type, "response": text},
             )
 
-        return await response.text()
+        data_string: str = await response.text()
+        data_object: dict[str, Any] = json.loads(data_string)
+        return data_object
 
     async def all_garages(self) -> list[Garage]:
         """Get all the garages.
@@ -103,10 +105,8 @@ class GaragesAmsterdam:
         Raises:
             GaragesAmsterdamError: If the data is not valid.
         """
-        results = []
-
+        results: list[Garage] = []
         data = await self._request("ParkingLocation.json")
-        data = json.loads(data)
 
         for item in data["features"]:
             try:
@@ -129,7 +129,7 @@ class GaragesAmsterdam:
         """
         return self
 
-    async def __aexit__(self, *_exc_info) -> None:
+    async def __aexit__(self, *_exc_info: str) -> None:
         """Async exit.
 
         Args:

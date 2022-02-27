@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from .const import CORRECTIONS, FILTER
 
@@ -21,7 +22,7 @@ class Garage:
     latitude: float
 
     @classmethod
-    def from_json(cls, data: dict) -> Garage:
+    def from_json(cls, data: dict[str, Any]) -> Garage:
         """Return Garages object from the Garages Amsterdam API.
 
         Args:
@@ -45,7 +46,7 @@ class Garage:
         )
 
 
-def split_coordinates(data):
+def split_coordinates(data: str) -> tuple[float, float]:
     """Split the coordinate data in separate variables.
 
     Args:
@@ -58,10 +59,10 @@ def split_coordinates(data):
     longitude, latitude = data.split(", ")
     longitude = longitude.replace("[", "")
     latitude = latitude.replace("]", "")
-    return latitude, longitude
+    return float(latitude), float(longitude)
 
 
-def correct_name(name):
+def correct_name(name: str) -> str:
     """Change parking garage name for consistency if needed.
 
     Args:

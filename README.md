@@ -16,7 +16,9 @@
 [![Code Quality][code-quality-shield]][code-quality]
 [![Maintainability][maintainability-shield]][maintainability-url]
 [![Code Coverage][codecov-shield]][codecov-url]
+
 [![Build Status][build-shield]][build-url]
+[![Typing Status][typing-shield]][typing-url]
 
 Asynchronous Python client for the garage occupancy in Amsterdam (The Netherlands).
 
@@ -166,6 +168,8 @@ SOFTWARE.
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
 [pypi]: https://pypi.org/project/garages-amsterdam/
 [python-versions-shield]: https://img.shields.io/pypi/pyversions/garages-amsterdam
+[typing-shield]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/typing.yaml/badge.svg
+[typing-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/typing.yaml
 [releases-shield]: https://img.shields.io/github/release/klaasnicolaas/python-garages-amsterdam.svg
 [releases]: https://github.com/klaasnicolaas/python-garages-amsterdam/releases
 [stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/python-garages-amsterdam.svg

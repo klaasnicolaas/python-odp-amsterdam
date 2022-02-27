@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import aiohttp
 import pytest
+from aresponses import Response, ResponsesMockServer
 
 from garages_amsterdam import GaragesAmsterdam
 from garages_amsterdam.exceptions import (
@@ -16,7 +17,7 @@ from . import load_fixtures
 
 
 @pytest.mark.asyncio
-async def test_json_request(aresponses):
+async def test_json_request(aresponses: ResponsesMockServer) -> None:
     """Test JSON response is handled correctly."""
     aresponses.add(
         "opd.it-t.nl",
@@ -36,7 +37,7 @@ async def test_json_request(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_internal_session(aresponses):
+async def test_internal_session(aresponses: ResponsesMockServer) -> None:
     """Test internal session is handled correctly."""
     aresponses.add(
         "opd.it-t.nl",
@@ -53,10 +54,10 @@ async def test_internal_session(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_timeout(aresponses):
+async def test_timeout(aresponses: ResponsesMockServer) -> None:
     """Test request timeout from the Garages Amsterdam API."""
     # Faking a timeout by sleeping
-    async def response_handler(_):
+    async def response_handler(_: aiohttp.ClientResponse) -> Response:
         await asyncio.sleep(0.2)
         return aresponses.Response(
             body="Goodmorning!", text=load_fixtures("garages.txt")
@@ -74,7 +75,7 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_content_type(aresponses):
+async def test_content_type(aresponses: ResponsesMockServer) -> None:
     """Test request content type error from Garages Amsterdam API."""
     aresponses.add(
         "opd.it-t.nl",
@@ -93,7 +94,7 @@ async def test_content_type(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_client_error():
+async def test_client_error() -> None:
     """Test request client error from the Garages Amsterdam API."""
     async with aiohttp.ClientSession() as session:
         client = GaragesAmsterdam(session=session)
