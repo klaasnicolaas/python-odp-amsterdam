@@ -3,14 +3,14 @@ from __future__ import annotations
 
 import asyncio
 import json
-from collections.abc import Mapping
+import socket
 from dataclasses import dataclass
 from importlib import metadata
 from typing import Any
 
+import aiohttp
 import async_timeout
-from aiohttp.client import ClientError, ClientResponseError, ClientSession
-from aiohttp.hdrs import METH_GET
+from aiohttp import hdrs
 from yarl import URL
 
 from .const import WRONGKEYS
@@ -23,7 +23,7 @@ class GaragesAmsterdam:
     """Main class for handling connection with Garages Amsterdam API."""
 
     request_timeout: float = 10.0
-    session: ClientSession | None = None
+    session: aiohttp.client.ClientSession | None = None
 
     _close_session: bool = False
 
@@ -31,9 +31,9 @@ class GaragesAmsterdam:
         self,
         uri: str,
         *,
-        method: str = METH_GET,
-        params: Mapping[str, Any] | None = None,
-    ) -> dict[str, Any]:
+        method: str = hdrs.METH_GET,
+        params: dict[str, Any] | None = None,
+    ) -> Any:
         """Handle a request to the Garages Amsterdam API.
 
         Args:
@@ -62,7 +62,7 @@ class GaragesAmsterdam:
         }
 
         if self.session is None:
-            self.session = ClientSession()
+            self.session = aiohttp.ClientSession()
             self._close_session = True
 
         try:
@@ -79,7 +79,7 @@ class GaragesAmsterdam:
             raise GaragesAmsterdamConnectionError(
                 "Timeout occurred while connecting to the Garages Amsterdam API.",
             ) from exception
-        except (ClientError, ClientResponseError) as exception:
+        except (aiohttp.ClientError, socket.gaierror) as exception:
             raise GaragesAmsterdamConnectionError(
                 "Error occurred while communicating with the Garages Amsterdam API."
             ) from exception
@@ -92,9 +92,7 @@ class GaragesAmsterdam:
                 {"Content-Type": content_type, "response": text},
             )
 
-        data_string: str = await response.text()
-        data_object: dict[str, Any] = json.loads(data_string)
-        return data_object
+        return json.loads(await response.text())
 
     async def all_garages(self) -> list[Garage]:
         """Get all the garages.
