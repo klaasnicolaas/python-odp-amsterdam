@@ -14,7 +14,11 @@ from aiohttp import hdrs
 from yarl import URL
 
 from .const import WRONGKEYS
-from .exceptions import GaragesAmsterdamConnectionError, GaragesAmsterdamError
+from .exceptions import (
+    GaragesAmsterdamConnectionError,
+    GaragesAmsterdamError,
+    GaragesAmsterdamResultsError,
+)
 from .models import Garage
 
 
@@ -113,6 +117,27 @@ class GaragesAmsterdam:
             except KeyError as exception:
                 raise GaragesAmsterdamError(f"Got wrong data: {item}") from exception
         return results
+
+    async def garage(self, garage_id: str) -> Garage:
+        """Get info from a single parking garage.
+
+        Args:
+            garage_id: The ID of the garage.
+
+        Returns:
+            A garage object.
+
+        Raises:
+            GaragesAmsterdamResultsError: When no results are found.
+        """
+        data = await self._request("ParkingLocation.json")
+        try:
+            result = [item for item in data["features"] if item["Id"] in garage_id]
+            return Garage.from_json(result[0])
+        except IndexError as exception:
+            raise GaragesAmsterdamResultsError(
+                f"No garage was found with id ({garage_id})"
+            ) from exception
 
     async def close(self) -> None:
         """Close open client session."""
