@@ -1,12 +1,17 @@
 """Asynchronous Python client for the Garages Amsterdam API."""
 
-from .exceptions import GaragesAmsterdamConnectionError, GaragesAmsterdamError
+from .exceptions import (
+    GaragesAmsterdamConnectionError,
+    GaragesAmsterdamError,
+    GaragesAmsterdamResultsError,
+)
 from .garages_amsterdam import GaragesAmsterdam
 from .models import Garage
 
 __all__ = [
-    "GaragesAmsterdam",
     "Garage",
+    "GaragesAmsterdam",
     "GaragesAmsterdamError",
+    "GaragesAmsterdamResultsError",
     "GaragesAmsterdamConnectionError",
 ]
