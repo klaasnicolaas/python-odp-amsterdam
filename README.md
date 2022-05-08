@@ -45,13 +45,14 @@ from garages_amsterdam import GaragesAmsterdam
 async def main():
     """Show example on using the Garage Amsterdam API client."""
     async with GaragesAmsterdam() as client:
-        garages: Garages = await client.all_garages()
-        print(garages)
+        all_garages: list[Garage] = await client.all_garages()
+        garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
+        print(all_garages)
+        print(garage)
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    asyncio.run(main())
 ```
 
 ## Data

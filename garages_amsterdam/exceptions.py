@@ -7,3 +7,7 @@ class GaragesAmsterdamError(Exception):
 
 class GaragesAmsterdamConnectionError(GaragesAmsterdamError):
     """Garages Amsterdam connection exception."""
+
+
+class GaragesAmsterdamResultsError(GaragesAmsterdamError):
+    """Garages Amsterdam results exception."""
