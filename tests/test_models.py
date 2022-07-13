@@ -30,6 +30,11 @@ async def test_all_garages(aresponses: ResponsesMockServer) -> None:
         client = GaragesAmsterdam(session=session)
         garages: list[Garage] = await client.all_garages()
         assert garages is not None
+        for item in garages:
+            assert isinstance(item, Garage)
+            assert item.garage_id is not None
+            assert item.garage_name is not None
+            assert item.state is not None
 
 
 @pytest.mark.asyncio
@@ -51,6 +56,7 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
         assert garage.garage_name == "P02 P Olympisch stadion"
         assert garage.free_space_long == "228"
         assert garage.free_space_short == "273"
+        assert garage.availability_pct == 88.35
 
 
 @pytest.mark.asyncio
