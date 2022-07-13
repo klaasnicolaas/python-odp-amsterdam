@@ -18,6 +18,7 @@ class Garage:
     free_space_long: int | None
     short_capacity: int
     long_capacity: int | None
+    availability_pct: float
     longitude: float
     latitude: float
 
@@ -32,15 +33,20 @@ class Garage:
             An Garages object.
         """
         latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
-
+        attr = data["properties"]
         return cls(
             garage_id=data["Id"],
             garage_name=correct_name(data["properties"]["Name"]),
-            state=data["properties"]["State"],
-            free_space_short=data["properties"]["FreeSpaceShort"],
-            free_space_long=data["properties"]["FreeSpaceLong"],
-            short_capacity=data["properties"]["ShortCapacity"],
-            long_capacity=data["properties"]["LongCapacity"],
+            state=attr.get("State"),
+            free_space_short=attr.get("FreeSpaceShort"),
+            free_space_long=attr.get("FreeSpaceLong", None),
+            short_capacity=attr.get("ShortCapacity"),
+            long_capacity=attr.get("LongCapacity", None),
+            availability_pct=round(
+                (float(attr.get("FreeSpaceShort")) / float(attr.get("ShortCapacity")))
+                * 100,
+                2,
+            ),
             longitude=longitude,
             latitude=latitude,
         )

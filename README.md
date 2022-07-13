@@ -65,6 +65,7 @@ You can read the following data with this package:
 - Free space long
 - Short capacity
 - Long capacity
+- Availability percentage (based on short capacity)
 - Longitude
 - Latitude
 
