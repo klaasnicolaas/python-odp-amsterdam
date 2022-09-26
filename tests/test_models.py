@@ -56,7 +56,7 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
         assert garage.garage_name == "P02 P Olympisch stadion"
         assert garage.free_space_long == "228"
         assert garage.free_space_short == "273"
-        assert garage.availability_pct == 88.35
+        assert garage.availability_pct == 88.3
 
 
 @pytest.mark.asyncio
