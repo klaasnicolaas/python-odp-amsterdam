@@ -45,7 +45,7 @@ class Garage:
             availability_pct=round(
                 (float(attr.get("FreeSpaceShort")) / float(attr.get("ShortCapacity")))
                 * 100,
-                2,
+                1,
             ),
             longitude=longitude,
             latitude=latitude,
