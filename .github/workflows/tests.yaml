@@ -51,7 +51,7 @@ jobs:
       - name: 🏗 Install dependencies
         run: poetry install --no-interaction
       - name: 🚀 Run pytest
-        run: poetry run pytest --cov garages_amsterdam tests
+        run: poetry run pytest --cov odp_amsterdam tests
       - name: ⬆️ Upload coverage artifact
         uses: actions/upload-artifact@v3
         with:
