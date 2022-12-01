@@ -1,4 +1,4 @@
-"""Basic tests for the Garages Amsterdam API."""
+"""Basic tests for the Open Data Platform API of Amsterdam."""
 # pylint: disable=protected-access
 import asyncio
 from unittest.mock import patch
@@ -7,11 +7,8 @@ import aiohttp
 import pytest
 from aresponses import Response, ResponsesMockServer
 
-from garages_amsterdam import GaragesAmsterdam
-from garages_amsterdam.exceptions import (
-    GaragesAmsterdamConnectionError,
-    GaragesAmsterdamError,
-)
+from odp_amsterdam import ODPAmsterdam
+from odp_amsterdam.exceptions import ODPAmsterdamConnectionError, ODPAmsterdamError
 
 from . import load_fixtures
 
@@ -20,17 +17,17 @@ from . import load_fixtures
 async def test_json_request(aresponses: ResponsesMockServer) -> None:
     """Test JSON response is handled correctly."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/test",
+        "api.data.amsterdam.nl",
+        "/test",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("garages.txt"),
+            text=load_fixtures("garages.json"),
         ),
     )
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
+        client = ODPAmsterdam(session=session)
         response = await client._request("test")
         assert response is not None
         await client.close()
@@ -40,46 +37,46 @@ async def test_json_request(aresponses: ResponsesMockServer) -> None:
 async def test_internal_session(aresponses: ResponsesMockServer) -> None:
     """Test internal session is handled correctly."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/test",
+        "api.data.amsterdam.nl",
+        "/test",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("garages.txt"),
+            text=load_fixtures("garages.json"),
         ),
     )
-    async with GaragesAmsterdam() as client:
+    async with ODPAmsterdam() as client:
         await client._request("test")
 
 
 @pytest.mark.asyncio
 async def test_timeout(aresponses: ResponsesMockServer) -> None:
-    """Test request timeout from the Garages Amsterdam API."""
+    """Test request timeout from the Open Data Platform API of Amsterdam."""
     # Faking a timeout by sleeping
     async def response_handler(_: aiohttp.ClientResponse) -> Response:
         await asyncio.sleep(0.2)
         return aresponses.Response(
-            body="Goodmorning!", text=load_fixtures("garages.txt")
+            body="Goodmorning!", text=load_fixtures("garages.json")
         )
 
-    aresponses.add("opd.it-t.nl", "/data/amsterdam/test", "GET", response_handler)
+    aresponses.add("api.data.amsterdam.nl", "/test", "GET", response_handler)
 
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(
+        client = ODPAmsterdam(
             session=session,
             request_timeout=0.1,
         )
-        with pytest.raises(GaragesAmsterdamConnectionError):
+        with pytest.raises(ODPAmsterdamConnectionError):
             assert await client._request("test")
 
 
 @pytest.mark.asyncio
 async def test_content_type(aresponses: ResponsesMockServer) -> None:
-    """Test request content type error from Garages Amsterdam API."""
+    """Test request content type error from Open Data Platform API of Amsterdam."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/test",
+        "api.data.amsterdam.nl",
+        "/test",
         "GET",
         aresponses.Response(
             status=200,
@@ -88,17 +85,17 @@ async def test_content_type(aresponses: ResponsesMockServer) -> None:
     )
 
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
-        with pytest.raises(GaragesAmsterdamError):
+        client = ODPAmsterdam(session=session)
+        with pytest.raises(ODPAmsterdamError):
             assert await client._request("test")
 
 
 @pytest.mark.asyncio
 async def test_client_error() -> None:
-    """Test request client error from the Garages Amsterdam API."""
+    """Test request client error from the Open Data Platform API of Amsterdam."""
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
+        client = ODPAmsterdam(session=session)
         with patch.object(
             session, "request", side_effect=aiohttp.ClientError
-        ), pytest.raises(GaragesAmsterdamConnectionError):
+        ), pytest.raises(ODPAmsterdamConnectionError):
             assert await client._request("test")

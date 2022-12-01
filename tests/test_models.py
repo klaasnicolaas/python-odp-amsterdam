@@ -3,11 +3,11 @@ import aiohttp
 import pytest
 from aresponses import ResponsesMockServer
 
-from garages_amsterdam import (
+from odp_amsterdam import (
     Garage,
-    GaragesAmsterdam,
-    GaragesAmsterdamError,
-    GaragesAmsterdamResultsError,
+    ODPAmsterdam,
+    ODPAmsterdamError,
+    ODPAmsterdamResultsError,
 )
 
 from . import load_fixtures
@@ -17,17 +17,17 @@ from . import load_fixtures
 async def test_all_garages(aresponses: ResponsesMockServer) -> None:
     """Test all garage function."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/ParkingLocation.json",
+        "api.data.amsterdam.nl",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("garages.txt"),
+            text=load_fixtures("garages.json"),
         ),
     )
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
+        client = ODPAmsterdam(session=session)
         garages: list[Garage] = await client.all_garages()
         assert garages is not None
         for item in garages:
@@ -41,17 +41,17 @@ async def test_all_garages(aresponses: ResponsesMockServer) -> None:
 async def test_single_garage(aresponses: ResponsesMockServer) -> None:
     """Test a single garage model."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/ParkingLocation.json",
+        "api.data.amsterdam.nl",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("garages.txt"),
+            text=load_fixtures("garages.json"),
         ),
     )
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
+        client = ODPAmsterdam(session=session)
         garage: Garage = await client.garage("900000001_parkinglocation")
         assert garage.garage_name == "P02 P Olympisch stadion"
         assert garage.free_space_long == "228"
@@ -63,18 +63,18 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
 async def test_wrong_garage_model(aresponses: ResponsesMockServer) -> None:
     """Test a wrong garage model."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/ParkingLocation.json",
+        "api.data.amsterdam.nl",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("wrong_garages.txt"),
+            text=load_fixtures("wrong_garages.json"),
         ),
     )
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
-        with pytest.raises(GaragesAmsterdamError):
+        client = ODPAmsterdam(session=session)
+        with pytest.raises(ODPAmsterdamError):
             garages: list[Garage] = await client.all_garages()
             assert garages is not None
 
@@ -83,17 +83,17 @@ async def test_wrong_garage_model(aresponses: ResponsesMockServer) -> None:
 async def test_no_garage_found(aresponses: ResponsesMockServer) -> None:
     """Test a wrong garage model."""
     aresponses.add(
-        "opd.it-t.nl",
-        "/data/amsterdam/ParkingLocation.json",
+        "api.data.amsterdam.nl",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "text/plain"},
-            text=load_fixtures("garages.txt"),
+            text=load_fixtures("garages.json"),
         ),
     )
     async with aiohttp.ClientSession() as session:
-        client = GaragesAmsterdam(session=session)
-        with pytest.raises(GaragesAmsterdamResultsError):
+        client = ODPAmsterdam(session=session)
+        with pytest.raises(ODPAmsterdamResultsError):
             garage = await client.garage(garage_id="test")
             assert garage is None
