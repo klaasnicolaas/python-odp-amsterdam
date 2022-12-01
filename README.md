@@ -1,4 +1,5 @@
-## Python - Garages Amsterdam Client
+<!-- Banner -->
+![alt Banner of the odp Amsterdam package](https://raw.githubusercontent.com/klaasnicolaas/python-odp-amsterdam/main/assets/header_odp_amsterdam-min.png)
 
 <!-- PROJECT SHIELDS -->
 [![GitHub Release][releases-shield]][releases]
