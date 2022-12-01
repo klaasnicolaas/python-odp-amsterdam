@@ -24,27 +24,54 @@ Asynchronous Python client for the garage occupancy in Amsterdam (The Netherland
 
 ## About
 
-A python package with which you can read the occupancy of a parking garage in Amsterdam (The Netherlands). Both for day visitors (short-term parking) and season ticket holders (long-term parking).
-
-**NOTE**: Not all parking garages have data for long-term parking.
+A python package with which you can retrieve data from the Open Data Platform of Amsterdam via [their API][api]. This package was initially created to only retrieve parking data from the API, but the code base is made in such a way that it is easy to extend for other datasets from the same platform.
 
 ## Installation
 
 ```bash
-pip install garages-amsterdam
+pip install odp-amsterdam
 ```
+
+## Datasets
+
+You can read the following datasets with this package:
+
+-  [Parking garages occupancy / Garages parkeerbezetting][garages] (52 garages)
+
+<details>
+    <summary>Click here to get more details</summary>
+
+### Parking garages
+
+Read the occupancy of a parking garage in Amsterdam (The Netherlands), both for day visitors (short-term parking) and season ticket holders (long-term parking).
+
+**NOTE**: Not all parking garages have data for long-term parking.
+
+| Variable | Type | Description |
+| :------- | :--- | :---------- |
+| `garage_id` | string | The id of the garage |
+| `garage_name` | string | The name of the garage |
+| `state` | string | The state of the garage (`ok` or `problem`) |
+| `free_space_short` | integer | The number of free spaces for day visitors |
+| `free_space_long` | integer (or None) | The number of free spaces for season ticket holders |
+| `short_capacity` | integer | The total capacity of the garage for day visitors |
+| `long_capacity` | integer (or None) | The total capacity of the garage for season ticket holders |
+| `availability_pct` | float | The percentage of free parking spaces |
+| `longitude` | float | The longitude of the garage |
+| `latitude` | float | The latitude of the garage |
+</details>
 
 ## Usage
 
 ```python
 import asyncio
 
-from garages_amsterdam import GaragesAmsterdam
+from odp_amsterdam import ODPAmsterdam
 
 
 async def main():
     """Show example on using the Garage Amsterdam API client."""
-    async with GaragesAmsterdam() as client:
+    async with ODPAmsterdam() as client:
         all_garages: list[Garage] = await client.all_garages()
         garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
         print(all_garages)
@@ -55,19 +82,11 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-## Data
+## Use cases
 
-You can read the following data with this package:
+[NIPKaart.nl][nipkaart]
 
-- Name of the parking garage
-- API State (`ok` or `problem`)
-- Free space short
-- Free space long
-- Short capacity
-- Long capacity
-- Availability percentage (based on short capacity)
-- Longitude
-- Latitude
+A website that provides insight into where disabled parking spaces are, based on data from users and municipalities. Operates mainly in the Netherlands, but also has plans to process data from abroad.
 
 ## Contributing
 
@@ -149,33 +168,37 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[api]: https://api.data.amsterdam.nl
+[nipkaart]: https://www.nipkaart.nl
+[garages]: https://data.amsterdam.nl/datasets/9ORkef6T-aU29g/actuele-beschikbaarheid-parkeergarages/
+
 <!-- MARKDOWN LINKS & IMAGES -->
-[build-shield]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/tests.yaml/badge.svg
-[build-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/tests.yaml
-[code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/klaasnicolaas/python-garages-amsterdam.svg?logo=lgtm&logoWidth=18
-[code-quality]: https://lgtm.com/projects/g/klaasnicolaas/python-garages-amsterdam/context:python
-[commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/python-garages-amsterdam.svg
-[commits-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/commits/main
-[codecov-shield]: https://codecov.io/gh/klaasnicolaas/python-garages-amsterdam/branch/main/graph/badge.svg?token=F6CE1S25NV
-[codecov-url]: https://codecov.io/gh/klaasnicolaas/python-garages-amsterdam
-[downloads-shield]: https://img.shields.io/pypi/dm/garages-amsterdam
-[downloads-url]: https://pypistats.org/packages/garages-amsterdam
-[issues-shield]: https://img.shields.io/github/issues/klaasnicolaas/python-garages-amsterdam.svg
-[issues-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/issues
-[license-shield]: https://img.shields.io/github/license/klaasnicolaas/python-garages-amsterdam.svg
-[last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/python-garages-amsterdam.svg
+[build-shield]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/tests.yaml/badge.svg
+[build-url]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/tests.yaml
+[code-quality-shield]: https://img.shields.io/lgtm/grade/python/g/klaasnicolaas/python-odp-amsterdam.svg?logo=lgtm&logoWidth=18
+[code-quality]: https://lgtm.com/projects/g/klaasnicolaas/python-odp-amsterdam/context:python
+[commits-shield]: https://img.shields.io/github/commit-activity/y/klaasnicolaas/python-odp-amsterdam.svg
+[commits-url]: https://github.com/klaasnicolaas/python-odp-amsterdam/commits/main
+[codecov-shield]: https://codecov.io/gh/klaasnicolaas/python-odp-amsterdam/branch/main/graph/badge.svg?token=F6CE1S25NV
+[codecov-url]: https://codecov.io/gh/klaasnicolaas/python-odp-amsterdam
+[downloads-shield]: https://img.shields.io/pypi/dm/odp-amsterdam
+[downloads-url]: https://pypistats.org/packages/odp-amsterdam
+[issues-shield]: https://img.shields.io/github/issues/klaasnicolaas/python-odp-amsterdam.svg
+[issues-url]: https://github.com/klaasnicolaas/python-odp-amsterdam/issues
+[license-shield]: https://img.shields.io/github/license/klaasnicolaas/python-odp-amsterdam.svg
+[last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/python-odp-amsterdam.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
 [maintainability-shield]: https://api.codeclimate.com/v1/badges/72d6baa9151bb0b0cfdf/maintainability
-[maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-garages-amsterdam/maintainability
+[maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-odp-amsterdam/maintainability
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
-[pypi]: https://pypi.org/project/garages-amsterdam/
-[python-versions-shield]: https://img.shields.io/pypi/pyversions/garages-amsterdam
-[typing-shield]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/typing.yaml/badge.svg
-[typing-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/actions/workflows/typing.yaml
-[releases-shield]: https://img.shields.io/github/release/klaasnicolaas/python-garages-amsterdam.svg
-[releases]: https://github.com/klaasnicolaas/python-garages-amsterdam/releases
-[stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/python-garages-amsterdam.svg
-[stars-url]: https://github.com/klaasnicolaas/python-garages-amsterdam/stargazers
+[pypi]: https://pypi.org/project/odp-amsterdam/
+[python-versions-shield]: https://img.shields.io/pypi/pyversions/odp-amsterdam
+[typing-shield]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/typing.yaml/badge.svg
+[typing-url]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/typing.yaml
+[releases-shield]: https://img.shields.io/github/release/klaasnicolaas/python-odp-amsterdam.svg
+[releases]: https://github.com/klaasnicolaas/python-odp-amsterdam/releases
+[stars-shield]: https://img.shields.io/github/stars/klaasnicolaas/python-odp-amsterdam.svg
+[stars-url]: https://github.com/klaasnicolaas/python-odp-amsterdam/stargazers
 
 [poetry-install]: https://python-poetry.org/docs/#installation
 [poetry]: https://python-poetry.org
