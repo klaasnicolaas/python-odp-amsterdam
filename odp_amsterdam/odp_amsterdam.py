@@ -1,4 +1,4 @@
-"""Asynchronous Python client for the Garages Amsterdam API."""
+"""Asynchronous Python client providing Open Data information of Amsterdam."""
 from __future__ import annotations
 
 import asyncio
@@ -15,16 +15,16 @@ from yarl import URL
 
 from .const import WRONGKEYS
 from .exceptions import (
-    GaragesAmsterdamConnectionError,
-    GaragesAmsterdamError,
-    GaragesAmsterdamResultsError,
+    ODPAmsterdamConnectionError,
+    ODPAmsterdamError,
+    ODPAmsterdamResultsError,
 )
 from .models import Garage
 
 
 @dataclass
-class GaragesAmsterdam:
-    """Main class for handling connection with Garages Amsterdam API."""
+class ODPAmsterdam:
+    """Main class for handling data fetchting from Open Data Platform of Amsterdam."""
 
     request_timeout: float = 10.0
     session: aiohttp.client.ClientSession | None = None
@@ -38,7 +38,7 @@ class GaragesAmsterdam:
         method: str = hdrs.METH_GET,
         params: dict[str, Any] | None = None,
     ) -> Any:
-        """Handle a request to the Garages Amsterdam API.
+        """Handle a request to the Open Data Platform API of Amsterdam.
 
         Args:
             uri: Request URI, without '/', for example, 'status'
@@ -47,22 +47,22 @@ class GaragesAmsterdam:
 
         Returns:
             A Python dictionary (text) with the response from
-            the Garages Amsterdam API.
+            the Open Data Platform API of Amsterdam.
 
         Raises:
-            GaragesAmsterdamConnectionError: An error occurred while
-                communicating with the Garages Amsterdam API.
-            GaragesAmsterdamError: Received an unexpected response from
-                the Garages Amsterdam API.
+            ODPAmsterdamConnectionError: An error occurred while
+                communicating with the Open Data Platform API of Amsterdam.
+            ODPAmsterdamError: Received an unexpected response from
+                the Open Data Platform API of Amsterdam.
         """
         version = metadata.version(__package__)
-        url = URL.build(
-            scheme="http", host="opd.it-t.nl", path="/data/amsterdam/"
-        ).join(URL(uri))
+        url = URL.build(scheme="http", host="api.data.amsterdam.nl", path="/").join(
+            URL(uri)
+        )
 
         headers = {
             "Accept": "application/json, text/plain",
-            "User-Agent": f"PythonGaragesAmsterdam/{version}",
+            "User-Agent": f"PythonODPAmsterdam/{version}",
         }
 
         if self.session is None:
@@ -80,19 +80,19 @@ class GaragesAmsterdam:
                 )
                 response.raise_for_status()
         except asyncio.TimeoutError as exception:
-            raise GaragesAmsterdamConnectionError(
-                "Timeout occurred while connecting to the Garages Amsterdam API.",
+            raise ODPAmsterdamConnectionError(
+                "Timeout occurred while connecting to the Open Data Platform API.",
             ) from exception
         except (aiohttp.ClientError, socket.gaierror) as exception:
-            raise GaragesAmsterdamConnectionError(
-                "Error occurred while communicating with the Garages Amsterdam API."
+            raise ODPAmsterdamConnectionError(
+                "Error occurred while communicating with the Open Data Platform API."
             ) from exception
 
         content_type = response.headers.get("Content-Type", "")
         if "text/plain" not in content_type:
             text = await response.text()
-            raise GaragesAmsterdamError(
-                "Unexpected response from the Garages Amsterdam API",
+            raise ODPAmsterdamError(
+                "Unexpected content type response from the Open Data Platform API",
                 {"Content-Type": content_type, "response": text},
             )
 
@@ -105,17 +105,17 @@ class GaragesAmsterdam:
             A list of Garage objects.
 
         Raises:
-            GaragesAmsterdamError: If the data is not valid.
+            ODPAmsterdamError: If the data is not valid.
         """
         results: list[Garage] = []
-        data = await self._request("ParkingLocation.json")
+        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ")
 
         for item in data["features"]:
             try:
                 if not any(x in item["properties"]["Name"] for x in WRONGKEYS):
                     results.append(Garage.from_json(item))
             except KeyError as exception:
-                raise GaragesAmsterdamError(f"Got wrong data: {item}") from exception
+                raise ODPAmsterdamError(f"Got wrong data: {item}") from exception
         return results
 
     async def garage(self, garage_id: str) -> Garage:
@@ -128,14 +128,14 @@ class GaragesAmsterdam:
             A garage object.
 
         Raises:
-            GaragesAmsterdamResultsError: When no results are found.
+            ODPAmsterdamResultsError: When no results are found.
         """
-        data = await self._request("ParkingLocation.json")
+        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ")
         try:
             result = [item for item in data["features"] if item["Id"] in garage_id]
             return Garage.from_json(result[0])
         except IndexError as exception:
-            raise GaragesAmsterdamResultsError(
+            raise ODPAmsterdamResultsError(
                 f"No garage was found with id ({garage_id})"
             ) from exception
 
@@ -144,11 +144,11 @@ class GaragesAmsterdam:
         if self.session and self._close_session:
             await self.session.close()
 
-    async def __aenter__(self) -> GaragesAmsterdam:
+    async def __aenter__(self) -> ODPAmsterdam:
         """Async enter.
 
         Returns:
-            The Garages Amsterdam object.
+            The Open Data Platform Amsterdam object.
         """
         return self
 

@@ -1,4 +1,4 @@
-"""Asynchronous Python client for the Garages Amsterdam API."""
+"""Asynchronous Python client providing Open Data information of Amsterdam."""
 import os
 
 

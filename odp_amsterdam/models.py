@@ -1,4 +1,4 @@
-"""Models for Garages Amsterdam."""
+"""Models for Open Data Platform of Amsterdam."""
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -24,7 +24,7 @@ class Garage:
 
     @classmethod
     def from_json(cls, data: dict[str, Any]) -> Garage:
-        """Return Garages object from the Garages Amsterdam API.
+        """Return Garages object from a dictionary.
 
         Args:
             data: The JSON data from the API.

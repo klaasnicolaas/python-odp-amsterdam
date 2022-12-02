@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "garages-amsterdam"
+name = "odp-amsterdam"
 version = "0.0.0"
-description = "Asynchronous Python client for the Garages Amsterdam"
+description = "Asynchronous Python client providing Open Data information of Amsterdam"
 authors = ["Klaas Schoute <hello@student-techlife.com>"]
 maintainers = ["Klaas Schoute <hello@student-techlife.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/klaasnicolaas/python-garages-amsterdam"
-repository = "https://github.com/klaasnicolaas/python-garages-amsterdam"
-documentation = "https://github.com/klaasnicolaas/python-garages-amsterdam"
+homepage = "https://github.com/klaasnicolaas/python-odp-amsterdam"
+repository = "https://github.com/klaasnicolaas/python-odp-amsterdam"
+documentation = "https://github.com/klaasnicolaas/python-odp-amsterdam"
 keywords = ["garages", "amsterdam", "car", "occupancy", "async", "client"]
 classifiers = [
     "Framework :: AsyncIO",
@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 packages = [
-    { include = "garages_amsterdam" }
+    { include = "odp_amsterdam" }
 ]
 
 [tool.poetry.dependencies]
@@ -62,14 +62,14 @@ yamllint = "^1.28.0"
 types-cachetools = "^5.2.1"
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/klaasnicolaas/python-garages-amsterdam/issues"
-Changelog = "https://github.com/klaasnicolaas/python-garages-amsterdam/releases"
+"Bug Tracker" = "https://github.com/klaasnicolaas/python-odp-amsterdam/issues"
+Changelog = "https://github.com/klaasnicolaas/python-odp-amsterdam/releases"
 
 [tool.black]
 target-version = ['py39']
 
 [tool.coverage.paths]
-source = ["garages_amsterdam"]
+source = ["odp_amsterdam"]
 
 [tool.coverage.report]
 show_missing = true
@@ -77,7 +77,7 @@ exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:"]
 
 [tool.coverage.run]
 branch = true
-source = ["garages_amsterdam"]
+source = ["odp_amsterdam"]
 
 [tool.isort]
 profile = "black"
@@ -157,7 +157,7 @@ asyncio_mode = "auto"
 
 [tool.vulture]
 min_confidence = 80
-paths = ["garages_amsterdam"]
+paths = ["odp_amsterdam"]
 verbose = true
 
 [build-system]
