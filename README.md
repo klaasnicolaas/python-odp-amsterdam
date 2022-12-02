@@ -21,7 +21,7 @@
 [![Build Status][build-shield]][build-url]
 [![Typing Status][typing-shield]][typing-url]
 
-Asynchronous Python client for the garage occupancy in Amsterdam (The Netherlands).
+Asynchronous Python client for the open datasets of Amsterdam (The Netherlands).
 
 ## About
 
