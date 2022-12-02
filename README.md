@@ -91,8 +91,16 @@ from odp_amsterdam import ODPAmsterdam
 async def main():
     """Show example on using the ODP Amsterdam API client."""
     async with ODPAmsterdam() as client:
+        # Parking locations
+        locations: list[ParkingSpot] = await client.location(
+            limit=5, parking_type="E6a"
+        )
+
+        # Garages
         all_garages: list[Garage] = await client.all_garages()
         garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
+
+        print(locations)
         print(all_garages)
         print(garage)
 
