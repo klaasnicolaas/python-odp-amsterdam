@@ -1,0 +1,819 @@
+{
+    "type": "FeatureCollection",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "urn:ogc:def:crs:EPSG::4326"
+        }
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113364485189",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776048883122122,
+                            52.353048181526646
+                        ],
+                        [
+                            4.776116187805603,
+                            52.35302111617978
+                        ],
+                        [
+                            4.776101550886286,
+                            52.35300746899857
+                        ],
+                        [
+                            4.776034395460224,
+                            52.35303435535144
+                        ],
+                        [
+                            4.776048883122122,
+                            52.353048181526646
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113364485189",
+                "buurtcode": "F84b",
+                "straatnaam": "Akersingel",
+                "type": "Langs",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113380485131",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776364952714649,
+                            52.352521958352455
+                        ],
+                        [
+                            4.776313837431911,
+                            52.352471272857635
+                        ],
+                        [
+                            4.776314408423197,
+                            52.35247244422163
+                        ],
+                        [
+                            4.776314536635218,
+                            52.352473793056724
+                        ],
+                        [
+                            4.776313933479543,
+                            52.35247495836056
+                        ],
+                        [
+                            4.77631289125579,
+                            52.35247603152002
+                        ],
+                        [
+                            4.776311411201029,
+                            52.35247692266324
+                        ],
+                        [
+                            4.776286763557937,
+                            52.35248677192885
+                        ],
+                        [
+                            4.776334721667615,
+                            52.35253222820375
+                        ],
+                        [
+                            4.776358636719726,
+                            52.35252228526906
+                        ],
+                        [
+                            4.776359817052997,
+                            52.35252184196956
+                        ],
+                        [
+                            4.776361141680781,
+                            52.352521579171174
+                        ],
+                        [
+                            4.776362462597566,
+                            52.35252158598833
+                        ],
+                        [
+                            4.776363782277361,
+                            52.35252168267724
+                        ],
+                        [
+                            4.776364952714649,
+                            52.352521958352455
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113380485131",
+                "buurtcode": "F84b",
+                "straatnaam": "Pilatus",
+                "type": "Langs",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113387485126",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776435654343937,
+                            52.35249329254775
+                        ],
+                        [
+                            4.776435811007135,
+                            52.35249257433039
+                        ],
+                        [
+                            4.776436261207198,
+                            52.352491857627776
+                        ],
+                        [
+                            4.776436858175679,
+                            52.35249114168248
+                        ],
+                        [
+                            4.776437599438891,
+                            52.352490606238256
+                        ],
+                        [
+                            4.776438487470513,
+                            52.3524900715514
+                        ],
+                        [
+                            4.776462992023861,
+                            52.35247995188128
+                        ],
+                        [
+                            4.776414888307476,
+                            52.35243440502855
+                        ],
+                        [
+                            4.776390677304954,
+                            52.35244452620369
+                        ],
+                        [
+                            4.776388615127438,
+                            52.35244505483083
+                        ],
+                        [
+                            4.776386411129364,
+                            52.352445223213124
+                        ],
+                        [
+                            4.776384213316011,
+                            52.35244494223616
+                        ],
+                        [
+                            4.77638231398705,
+                            52.35244430328666
+                        ],
+                        [
+                            4.776380713142511,
+                            52.352443306364606
+                        ],
+                        [
+                            4.776435654343937,
+                            52.35249329254775
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113387485126",
+                "buurtcode": "F84b",
+                "straatnaam": "Pilatus",
+                "type": "Langs",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113437488820",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776741797572988,
+                            52.38567780067632
+                        ],
+                        [
+                            4.776742097030542,
+                            52.385656051835994
+                        ],
+                        [
+                            4.776667334769801,
+                            52.38565575629338
+                        ],
+                        [
+                            4.776667329032183,
+                            52.38567750664795
+                        ],
+                        [
+                            4.776741797572988,
+                            52.38567780067632
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113437488820",
+                "buurtcode": "F11j",
+                "straatnaam": "Daveren",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113437488823",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776741498115094,
+                            52.385699549516595
+                        ],
+                        [
+                            4.776741797572988,
+                            52.38567780067632
+                        ],
+                        [
+                            4.776667329032183,
+                            52.38567750664795
+                        ],
+                        [
+                            4.776667323294517,
+                            52.38569925700247
+                        ],
+                        [
+                            4.776741498115094,
+                            52.385699549516595
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113437488823",
+                "buurtcode": "F11j",
+                "straatnaam": "Daveren",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113438488898",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.77673191109174,
+                            52.386374480971064
+                        ],
+                        [
+                            4.776732211797739,
+                            52.38635264226265
+                        ],
+                        [
+                            4.77666699435999,
+                            52.386352485804764
+                        ],
+                        [
+                            4.776666988620702,
+                            52.38637423615626
+                        ],
+                        [
+                            4.77673191109174,
+                            52.386374480971064
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113438488898",
+                "buurtcode": "F11j",
+                "straatnaam": "Daveren",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113438488900",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.776731611622877,
+                            52.386396229808184
+                        ],
+                        [
+                            4.77673191109174,
+                            52.386374480971064
+                        ],
+                        [
+                            4.776666988620702,
+                            52.38637423615626
+                        ],
+                        [
+                            4.776666979168543,
+                            52.386396256121316
+                        ],
+                        [
+                            4.776731611622877,
+                            52.386396229808184
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113438488900",
+                "buurtcode": "F11j",
+                "straatnaam": "Daveren",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113701486028",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.780920552035411,
+                            52.36056754285498
+                        ],
+                        [
+                            4.7808907176338,
+                            52.360580691998564
+                        ],
+                        [
+                            4.780937297368071,
+                            52.36062056678741
+                        ],
+                        [
+                            4.780966984987403,
+                            52.36060741688037
+                        ],
+                        [
+                            4.780920552035411,
+                            52.36056754285498
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113701486028",
+                "buurtcode": "F80c",
+                "straatnaam": "ONBEKEND",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113704486027",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.780966984987403,
+                            52.36060741688037
+                        ],
+                        [
+                            4.780996820612387,
+                            52.36059417784583
+                        ],
+                        [
+                            4.780950240852128,
+                            52.360554303080214
+                        ],
+                        [
+                            4.780920552035411,
+                            52.36056754285498
+                        ],
+                        [
+                            4.780966984987403,
+                            52.36060741688037
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113704486027",
+                "buurtcode": "F80c",
+                "straatnaam": "ONBEKEND",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "parkeervakken.113705486025",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            4.780996820612387,
+                            52.36059417784583
+                        ],
+                        [
+                            4.7810185321361,
+                            52.36058458220132
+                        ],
+                        [
+                            4.781019861888863,
+                            52.36058395986453
+                        ],
+                        [
+                            4.781021047301977,
+                            52.36058315703244
+                        ],
+                        [
+                            4.781021939124441,
+                            52.36058235269695
+                        ],
+                        [
+                            4.781022539811959,
+                            52.360581367114506
+                        ],
+                        [
+                            4.781022993704151,
+                            52.36058038078031
+                        ],
+                        [
+                            4.781023155233577,
+                            52.36057930307097
+                        ],
+                        [
+                            4.781023021944572,
+                            52.36057831372991
+                        ],
+                        [
+                            4.781022595064997,
+                            52.360577322885426
+                        ],
+                        [
+                            4.781022021390155,
+                            52.360576331289195
+                        ],
+                        [
+                            4.781021004873798,
+                            52.36057551718135
+                        ],
+                        [
+                            4.780985870894131,
+                            52.36054675604109
+                        ],
+                        [
+                            4.780985002402217,
+                            52.36054585281295
+                        ],
+                        [
+                            4.780984281933444,
+                            52.360544860464806
+                        ],
+                        [
+                            4.780983855055053,
+                            52.360543869620145
+                        ],
+                        [
+                            4.780983722994947,
+                            52.36054279040732
+                        ],
+                        [
+                            4.780983884525188,
+                            52.36054171269799
+                        ],
+                        [
+                            4.78098433718991,
+                            52.360540816235684
+                        ],
+                        [
+                            4.780984788626691,
+                            52.360540009645156
+                        ],
+                        [
+                            4.78098553365378,
+                            52.36053920455818
+                        ],
+                        [
+                            4.780986424248081,
+                            52.36053849009465
+                        ],
+                        [
+                            4.780987460409595,
+                            52.360537866254724
+                        ],
+                        [
+                            4.780950240852128,
+                            52.360554303080214
+                        ],
+                        [
+                            4.780996820612387,
+                            52.36059417784583
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "id": "113705486025",
+                "buurtcode": "F80c",
+                "straatnaam": "ONBEKEND",
+                "type": "Haaks",
+                "soort": "MULDER",
+                "eType": "E6a",
+                "aantal": 1.0,
+                "regimes": [
+                    {
+                        "soort": "MULDER",
+                        "eType": "E6a",
+                        "eTypeDescription": "Gehandicaptenparkeerplaats algemeen",
+                        "aantal": 1.0,
+                        "bord": "",
+                        "kenteken": null,
+                        "beginTijd": "00:00:00",
+                        "eindTijd": "23:59:00",
+                        "beginDatum": null,
+                        "eindDatum": null,
+                        "dagen": [
+                            "ma",
+                            "di",
+                            "wo",
+                            "do",
+                            "vr",
+                            "za",
+                            "zo"
+                        ],
+                        "opmerking": ""
+                    }
+                ]
+            }
+        }
+    ],
+    "_links": [
+        {
+            "href": "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken/?_format=geojson&_pageSize=10&eType=E6a&page=2",
+            "rel": "next",
+            "type": "application/geo+json",
+            "title": "next page"
+        }
+    ]
+}

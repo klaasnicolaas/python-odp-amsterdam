@@ -19,14 +19,14 @@ from .exceptions import (
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
 )
-from .models import Garage
+from .models import Garage, ParkingSpot
 
 
 @dataclass
 class ODPAmsterdam:
     """Main class for handling data fetchting from Open Data Platform of Amsterdam."""
 
-    request_timeout: float = 10.0
+    request_timeout: float = 15.0
     session: aiohttp.client.ClientSession | None = None
 
     _close_session: bool = False
@@ -56,12 +56,12 @@ class ODPAmsterdam:
                 the Open Data Platform API of Amsterdam.
         """
         version = metadata.version(__package__)
-        url = URL.build(scheme="http", host="api.data.amsterdam.nl", path="/").join(
+        url = URL.build(scheme="https", host="api.data.amsterdam.nl", path="/").join(
             URL(uri)
         )
 
         headers = {
-            "Accept": "application/json, text/plain",
+            "Accept": "application/json, text/plain, application/geo+json",
             "User-Agent": f"PythonODPAmsterdam/{version}",
         }
 
@@ -76,7 +76,7 @@ class ODPAmsterdam:
                     url,
                     params=params,
                     headers=headers,
-                    ssl=False,
+                    ssl=True,
                 )
                 response.raise_for_status()
         except asyncio.TimeoutError as exception:
@@ -88,8 +88,9 @@ class ODPAmsterdam:
                 "Error occurred while communicating with the Open Data Platform API."
             ) from exception
 
+        types = ["application/json", "text/plain", "application/geo+json"]
         content_type = response.headers.get("Content-Type", "")
-        if "text/plain" not in content_type:
+        if not any(item in content_type for item in types):
             text = await response.text()
             raise ODPAmsterdamError(
                 "Unexpected content type response from the Open Data Platform API",
@@ -97,6 +98,28 @@ class ODPAmsterdam:
             )
 
         return json.loads(await response.text())
+
+    async def locations(
+        self, limit: int = 10, parking_type: str = ""
+    ) -> list[ParkingSpot]:
+        """Get all the parking locations.
+
+        Args:
+            limit: The number of results to return.
+            parking_type: The selected parking type number.
+
+        Returns:
+            A list of ParkingSpot objects.
+        """
+        results: list[ParkingSpot] = []
+        locations = await self._request(
+            "v1/parkeervakken/parkeervakken",
+            params={"_pageSize": limit, "eType": parking_type, "_format": "geojson"},
+        )
+
+        for item in locations["features"]:
+            results.append(ParkingSpot.from_json(item))
+        return results
 
     async def all_garages(self) -> list[Garage]:
         """Get all the garages.

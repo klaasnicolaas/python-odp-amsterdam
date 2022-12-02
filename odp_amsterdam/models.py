@@ -4,7 +4,44 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from .const import CORRECTIONS, FILTER
+from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
+
+
+@dataclass
+class ParkingSpot:
+    """Object representing an ParkingSpot model response from the API."""
+
+    spot_id: str
+    spot_type: str | None
+    spot_description: str | None
+
+    street: str | None
+    number: int | None
+    orientation: str | None
+
+    coordinates: list[float]
+
+    @classmethod
+    def from_json(cls, data: dict[str, Any]) -> ParkingSpot:
+        """Return ParkingSpot object from a dictionary.
+
+        Args:
+            data: The JSON data from the API.
+
+        Returns:
+            An ParkingSpot object.
+        """
+        attr = data["properties"]
+        regimes = attr["regimes"][0]
+        return cls(
+            spot_id=attr["id"],
+            spot_type=attr["eType"] or None,
+            spot_description=regimes["eTypeDescription"] or None,
+            street=filter_unknown(attr["straatnaam"]),
+            number=int(attr["aantal"]),
+            orientation=filter_unknown(attr["type"]),
+            coordinates=data["geometry"]["coordinates"],
+        )
 
 
 @dataclass
@@ -24,13 +61,13 @@ class Garage:
 
     @classmethod
     def from_json(cls, data: dict[str, Any]) -> Garage:
-        """Return Garages object from a dictionary.
+        """Return Garage object from a dictionary.
 
         Args:
             data: The JSON data from the API.
 
         Returns:
-            An Garages object.
+            An Garage object.
         """
         latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
         attr = data["properties"]
@@ -78,7 +115,7 @@ def correct_name(name: str) -> str:
         The corrected name.
     """
 
-    for value in FILTER:
+    for value in FILTER_NAMES:
         # Remove parts from name string.
         name = name.replace(value, "")
 
@@ -86,3 +123,17 @@ def correct_name(name: str) -> str:
         # Add a 0 for consistency.
         return name[:1] + "0" + name[1:]
     return name
+
+
+def filter_unknown(data: str) -> str | None:
+    """Filter unknown data from the API.
+
+    Args:
+        data: The data to be filtered.
+
+    Returns:
+        The filtered data.
+    """
+    if data in FILTER_UNKNOWN:
+        return None
+    return data

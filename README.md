@@ -1,5 +1,5 @@
-<!-- Banner -->
-![alt Banner of the odp Amsterdam package](https://raw.githubusercontent.com/klaasnicolaas/python-odp-amsterdam/main/assets/header_odp_amsterdam-min.png)
+<!-- Header -->
+![alt Header of the odp Amsterdam package](https://raw.githubusercontent.com/klaasnicolaas/python-odp-amsterdam/main/assets/header_odp_amsterdam-min.png)
 
 <!-- PROJECT SHIELDS -->
 [![GitHub Release][releases-shield]][releases]
@@ -37,7 +37,8 @@ pip install odp-amsterdam
 
 You can read the following datasets with this package:
 
--  [Parking garages occupancy / Garages parkeerbezetting][garages] (52 garages)
+- [Parking garages occupancy / Garages parkeerbezetting][garages] (52 garages)
+- [Parking locations / Parkeervakken][parking]
 
 <details>
     <summary>Click here to get more details</summary>
@@ -60,6 +61,23 @@ Read the occupancy of a parking garage in Amsterdam (The Netherlands), both for 
 | `availability_pct` | float | The percentage of free parking spaces |
 | `longitude` | float | The longitude of the garage |
 | `latitude` | float | The latitude of the garage |
+
+### Parking locations
+
+You can use the following parameters in your request:
+
+- **limit** (default: 10) - How many results you want to retrieve.
+- **parking_type** (default: "") - Filter based on the `eType` from the geojson data.
+
+| Variable | Type | Description |
+| :------- | :--- | :---------- |
+| `spot_id` | string | The id of the location |
+| `spot_type` | string (or None) | The type of the location (e.g. **E6a**) |
+| `spot_description` | string (or None) | The description of the location type |
+| `street` | string (or None) | The street name of the location |
+| `number` | integer (or None) | How many parking spots there are on this location |
+| `orientation` | string (or None) | The parking orientation of the location (**visgraag**, **langs** or **file**) |
+| `coordinates` | list[float] | The coordinates of the location |
 </details>
 
 ## Usage
@@ -73,8 +91,16 @@ from odp_amsterdam import ODPAmsterdam
 async def main():
     """Show example on using the ODP Amsterdam API client."""
     async with ODPAmsterdam() as client:
+        # Parking locations
+        locations: list[ParkingSpot] = await client.location(
+            limit=5, parking_type="E6a"
+        )
+
+        # Garages
         all_garages: list[Garage] = await client.all_garages()
         garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
+
+        print(locations)
         print(all_garages)
         print(garage)
 
@@ -172,6 +198,7 @@ SOFTWARE.
 [api]: https://api.data.amsterdam.nl
 [nipkaart]: https://www.nipkaart.nl
 [garages]: https://data.amsterdam.nl/datasets/9ORkef6T-aU29g/actuele-beschikbaarheid-parkeergarages/
+[parking]: https://api.data.amsterdam.nl/v1/docs/datasets/parkeervakken.html
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [build-shield]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/tests.yaml/badge.svg
