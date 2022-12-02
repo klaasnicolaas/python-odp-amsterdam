@@ -8,6 +8,7 @@ from odp_amsterdam import (
     ODPAmsterdam,
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
+    ParkingSpot,
 )
 
 from . import load_fixtures
@@ -57,6 +58,31 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
         assert garage.free_space_long == "228"
         assert garage.free_space_short == "273"
         assert garage.availability_pct == 88.3
+
+
+@pytest.mark.asyncio
+async def test_parking_locations_model(aresponses: ResponsesMockServer) -> None:
+    """Test the parking locations model."""
+    aresponses.add(
+        "api.data.amsterdam.nl",
+        "/v1/parkeervakken/parkeervakken",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/geo+json"},
+            text=load_fixtures("parking.json"),
+        ),
+    )
+    async with aiohttp.ClientSession() as session:
+        client = ODPAmsterdam(session=session)
+        locations: list[ParkingSpot] = await client.locations()
+        assert locations is not None
+        for item in locations:
+            assert isinstance(item, ParkingSpot)
+            assert item.spot_id is not None and isinstance(item.spot_id, str)
+            assert isinstance(item.spot_type, str)
+            assert isinstance(item.street, str) or item.street is None
+            assert item.coordinates is not None and isinstance(item.coordinates, list)
 
 
 @pytest.mark.asyncio

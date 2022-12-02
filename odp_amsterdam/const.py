@@ -5,7 +5,7 @@ WRONGKEYS: list[str] = [
     "Fiets",
 ]
 
-FILTER: list[str] = [
+FILTER_NAMES: list[str] = [
     "CE-",
     "ZD-",
     "ZO-",
@@ -13,6 +13,11 @@ FILTER: list[str] = [
     "FJ212P34 ",
     "VRN-FJ212",
     "GRV020HNK ",
+]
+
+FILTER_UNKNOWN: list[str] = [
+    "ONBEKEND",
+    "Onbekend",
 ]
 
 CORRECTIONS: list[str] = [
