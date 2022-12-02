@@ -72,6 +72,7 @@ repos:
         types: [text]
         exclude: ^poetry\.lock$
         entry: poetry run codespell
+        args: [--ignore-words=.codespell-ignore]
       - id: debug-statements
         name: 🪵  Debug Statements and imports (Python)
         language: system
