@@ -131,7 +131,7 @@ class ODPAmsterdam:
             ODPAmsterdamError: If the data is not valid.
         """
         results: list[Garage] = []
-        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ")
+        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
 
         for item in data["features"]:
             try:
@@ -153,7 +153,7 @@ class ODPAmsterdam:
         Raises:
             ODPAmsterdamResultsError: When no results are found.
         """
-        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ")
+        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
         try:
             result = [item for item in data["features"] if item["Id"] in garage_id]
             return Garage.from_json(result[0])

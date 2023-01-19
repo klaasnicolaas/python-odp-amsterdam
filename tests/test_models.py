@@ -19,7 +19,7 @@ async def test_all_garages(aresponses: ResponsesMockServer) -> None:
     """Test all garage function."""
     aresponses.add(
         "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
         "GET",
         aresponses.Response(
             status=200,
@@ -43,7 +43,7 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
     """Test a single garage model."""
     aresponses.add(
         "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
         "GET",
         aresponses.Response(
             status=200,
@@ -90,7 +90,7 @@ async def test_wrong_garage_model(aresponses: ResponsesMockServer) -> None:
     """Test a wrong garage model."""
     aresponses.add(
         "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
         "GET",
         aresponses.Response(
             status=200,
@@ -110,7 +110,7 @@ async def test_no_garage_found(aresponses: ResponsesMockServer) -> None:
     """Test a wrong garage model."""
     aresponses.add(
         "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/l6HdY0TFamuFOQ",
+        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
         "GET",
         aresponses.Response(
             status=200,
