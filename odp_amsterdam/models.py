@@ -134,7 +134,7 @@ def correct_name(name: str) -> str:
         name = name.replace(value, "")
 
     if any(y in name for y in CORRECTIONS):
-        # Add a 0 for consistency.
+        # Add a 0 for consistency. (e.g. P3 -> P03)
         return name[:1] + "0" + name[1:]
     return name
 

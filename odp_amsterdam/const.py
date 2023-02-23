@@ -14,6 +14,12 @@ FILTER_NAMES: list[str] = [
     "FJ212P34 ",
     "VRN-FJ212",
     "GRV020HNK ",
+    " P ",
+    " P4",
+    " P5",
+    " P21",
+    " P22",
+    " P23",
 ]
 
 FILTER_UNKNOWN: list[str] = [
