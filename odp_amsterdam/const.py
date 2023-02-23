@@ -1,8 +1,9 @@
 """Asynchronous Python client providing Open Data information of Amsterdam."""
 
-WRONGKEYS: list[str] = [
+FILTER_OUT: list[str] = [
     "FP",
     "Fiets",
+    "Dummy",
 ]
 
 FILTER_NAMES: list[str] = [
