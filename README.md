@@ -37,7 +37,7 @@ pip install odp-amsterdam
 
 You can read the following datasets with this package:
 
-- [Parking garages occupancy / Garages parkeerbezetting][garages] (52 garages)
+- [Parking garages occupancy / Garages parkeerbezetting][garages] (53 garages)
 - [Parking locations / Parkeervakken][parking]
 
 <details>

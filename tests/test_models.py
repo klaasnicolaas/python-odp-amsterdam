@@ -53,11 +53,14 @@ async def test_single_garage(aresponses: ResponsesMockServer) -> None:
     )
     async with aiohttp.ClientSession() as session:
         client = ODPAmsterdam(session=session)
-        garage: Garage = await client.garage("900000001_parkinglocation")
-        assert garage.garage_name == "P02 P Olympisch stadion"
-        assert garage.free_space_long == "228"
-        assert garage.free_space_short == "273"
-        assert garage.availability_pct == 88.3
+        garage: Garage = await client.garage("A557D1AD-5D39-915B-8B54-A4AAFA2C1CFC")
+        assert garage.garage_name == "P02 Olympisch Stadion"
+        assert garage.state == "ok"
+        assert garage.free_space_long == 98
+        assert garage.long_capacity == 250
+        assert garage.free_space_short == 245
+        assert garage.short_capacity == 400
+        assert garage.availability_pct == 61.3
 
 
 @pytest.mark.asyncio

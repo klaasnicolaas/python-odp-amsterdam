@@ -75,10 +75,14 @@ class Garage:
             garage_id=data["Id"],
             garage_name=correct_name(data["properties"]["Name"]),
             state=attr.get("State"),
-            free_space_short=attr.get("FreeSpaceShort"),
-            free_space_long=attr.get("FreeSpaceLong", None),
-            short_capacity=attr.get("ShortCapacity"),
-            long_capacity=attr.get("LongCapacity", None),
+            free_space_short=int(attr["FreeSpaceShort"]),
+            free_space_long=None
+            if attr["FreeSpaceLong"] == ""
+            else int(attr["FreeSpaceLong"]),
+            short_capacity=int(attr["ShortCapacity"]),
+            long_capacity=None
+            if attr["LongCapacity"] == ""
+            else int(attr["LongCapacity"]),
             availability_pct=calculate_pct(
                 attr.get("FreeSpaceShort"), attr.get("ShortCapacity")
             ),
@@ -134,7 +138,7 @@ def correct_name(name: str) -> str:
         name = name.replace(value, "")
 
     if any(y in name for y in CORRECTIONS):
-        # Add a 0 for consistency.
+        # Add a 0 for consistency. (e.g. P3 -> P03)
         return name[:1] + "0" + name[1:]
     return name
 
