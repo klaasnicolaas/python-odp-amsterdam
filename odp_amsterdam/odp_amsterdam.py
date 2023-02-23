@@ -13,7 +13,7 @@ import async_timeout
 from aiohttp import hdrs
 from yarl import URL
 
-from .const import WRONGKEYS
+from .const import FILTER_OUT
 from .exceptions import (
     ODPAmsterdamConnectionError,
     ODPAmsterdamError,
@@ -135,7 +135,7 @@ class ODPAmsterdam:
 
         for item in data["features"]:
             try:
-                if not any(x in item["properties"]["Name"] for x in WRONGKEYS):
+                if not any(x in item["properties"]["Name"] for x in FILTER_OUT):
                     results.append(Garage.from_json(item))
             except KeyError as exception:
                 raise ODPAmsterdamError(f"Got wrong data: {item}") from exception

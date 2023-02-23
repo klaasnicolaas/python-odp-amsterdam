@@ -55,7 +55,7 @@ class Garage:
     free_space_long: int | None
     short_capacity: int
     long_capacity: int | None
-    availability_pct: float
+    availability_pct: float | None
     longitude: float
     latitude: float
 
@@ -79,10 +79,8 @@ class Garage:
             free_space_long=attr.get("FreeSpaceLong", None),
             short_capacity=attr.get("ShortCapacity"),
             long_capacity=attr.get("LongCapacity", None),
-            availability_pct=round(
-                (float(attr.get("FreeSpaceShort")) / float(attr.get("ShortCapacity")))
-                * 100,
-                1,
+            availability_pct=calculate_pct(
+                attr.get("FreeSpaceShort"), attr.get("ShortCapacity")
             ),
             longitude=longitude,
             latitude=latitude,
@@ -103,6 +101,22 @@ def split_coordinates(data: str) -> tuple[float, float]:
     longitude = longitude.replace("[", "")
     latitude = latitude.replace("]", "")
     return float(latitude), float(longitude)
+
+
+def calculate_pct(current: int, total: int) -> float | None:
+    """Calculate the percentage of free parking spots.
+
+    Args:
+        current: The current amount of free parking spots.
+        total: The total amount of parking spots.
+
+    Returns:
+        The percentage of free parking spots.
+    """
+    try:
+        return round((float(current) / float(total)) * 100, 1)
+    except ZeroDivisionError:
+        return None
 
 
 def correct_name(name: str) -> str:
