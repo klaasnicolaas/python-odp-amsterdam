@@ -13,21 +13,21 @@ async def main() -> None:
 
         garages: list[Garage] = await client.all_garages()
         locations = await client.locations(limit=10, parking_type="E6a")
-        garage = await client.garage(garage_id="900000001_parkinglocation")
+        garage = await client.garage(garage_id="99b77fc5-a237-4ba0-abe4-b9a3886aa471")
 
-        print(garages)
+        print(locations)
         print()
         print(garage)
         print()
 
-        for index, item in enumerate(locations, 1):
+        for index, item in enumerate(garages, 1):
             count = index
             print(item)
 
         # # Count unique id's in disabled_parkings
         unique_values: list[str] = []
-        for location in locations:
-            unique_values.append(location.spot_id)
+        for location in garages:
+            unique_values.append(location.garage_id)
         num_values = len(set(unique_values))
 
         print("__________________________")
