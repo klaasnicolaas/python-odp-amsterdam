@@ -8,9 +8,9 @@ from dataclasses import dataclass
 from importlib import metadata
 from typing import Any
 
-import aiohttp
 import async_timeout
-from aiohttp import hdrs
+from aiohttp import ClientError, ClientSession
+from aiohttp.hdrs import METH_GET
 from yarl import URL
 
 from .const import FILTER_OUT
@@ -27,7 +27,7 @@ class ODPAmsterdam:
     """Main class for handling data fetchting from Open Data Platform of Amsterdam."""
 
     request_timeout: float = 15.0
-    session: aiohttp.client.ClientSession | None = None
+    session: ClientSession | None = None
 
     _close_session: bool = False
 
@@ -35,7 +35,7 @@ class ODPAmsterdam:
         self,
         uri: str,
         *,
-        method: str = hdrs.METH_GET,
+        method: str = METH_GET,
         params: dict[str, Any] | None = None,
     ) -> Any:
         """Handle a request to the Open Data Platform API of Amsterdam.
@@ -45,11 +45,13 @@ class ODPAmsterdam:
             method: HTTP method to use, for example, 'GET'
             params: Extra options to improve or limit the response.
 
-        Returns:
+        Returns
+        -------
             A Python dictionary (text) with the response from
             the Open Data Platform API of Amsterdam.
 
-        Raises:
+        Raises
+        ------
             ODPAmsterdamConnectionError: An error occurred while
                 communicating with the Open Data Platform API of Amsterdam.
             ODPAmsterdamError: Received an unexpected response from
@@ -57,7 +59,7 @@ class ODPAmsterdam:
         """
         version = metadata.version(__package__)
         url = URL.build(scheme="https", host="api.data.amsterdam.nl", path="/").join(
-            URL(uri)
+            URL(uri),
         )
 
         headers = {
@@ -66,7 +68,7 @@ class ODPAmsterdam:
         }
 
         if self.session is None:
-            self.session = aiohttp.ClientSession()
+            self.session = ClientSession()
             self._close_session = True
 
         try:
@@ -80,27 +82,32 @@ class ODPAmsterdam:
                 )
                 response.raise_for_status()
         except asyncio.TimeoutError as exception:
+            msg = "Timeout occurred while connecting to the Open Data Platform API."
             raise ODPAmsterdamConnectionError(
-                "Timeout occurred while connecting to the Open Data Platform API.",
+                msg,
             ) from exception
-        except (aiohttp.ClientError, socket.gaierror) as exception:
+        except (ClientError, socket.gaierror) as exception:
+            msg = "Error occurred while communicating with the Open Data Platform API."
             raise ODPAmsterdamConnectionError(
-                "Error occurred while communicating with the Open Data Platform API."
+                msg,
             ) from exception
 
         types = ["application/json", "text/plain", "application/geo+json"]
         content_type = response.headers.get("Content-Type", "")
         if not any(item in content_type for item in types):
             text = await response.text()
+            msg = "Unexpected content type response from the Open Data Platform API"
             raise ODPAmsterdamError(
-                "Unexpected content type response from the Open Data Platform API",
+                msg,
                 {"Content-Type": content_type, "response": text},
             )
 
         return json.loads(await response.text())
 
     async def locations(
-        self, limit: int = 10, parking_type: str = ""
+        self,
+        limit: int = 10,
+        parking_type: str = "",
     ) -> list[ParkingSpot]:
         """Get all the parking locations.
 
@@ -108,7 +115,8 @@ class ODPAmsterdam:
             limit: The number of results to return.
             parking_type: The selected parking type number.
 
-        Returns:
+        Returns
+        -------
             A list of ParkingSpot objects.
         """
         results: list[ParkingSpot] = []
@@ -124,10 +132,12 @@ class ODPAmsterdam:
     async def all_garages(self) -> list[Garage]:
         """Get all the garages.
 
-        Returns:
+        Returns
+        -------
             A list of Garage objects.
 
-        Raises:
+        Raises
+        ------
             ODPAmsterdamError: If the data is not valid.
         """
         results: list[Garage] = []
@@ -138,7 +148,8 @@ class ODPAmsterdam:
                 if not any(x in item["properties"]["Name"] for x in FILTER_OUT):
                     results.append(Garage.from_json(item))
             except KeyError as exception:
-                raise ODPAmsterdamError(f"Got wrong data: {item}") from exception
+                msg = f"Got wrong data from the API: {item}"
+                raise ODPAmsterdamError(msg) from exception
         return results
 
     async def garage(self, garage_id: str) -> Garage:
@@ -147,20 +158,20 @@ class ODPAmsterdam:
         Args:
             garage_id: The ID of the garage.
 
-        Returns:
+        Returns
+        -------
             A garage object.
 
-        Raises:
+        Raises
+        ------
             ODPAmsterdamResultsError: When no results are found.
         """
         data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
-        try:
-            result = [item for item in data["features"] if item["Id"] in garage_id]
-            return Garage.from_json(result[0])
-        except IndexError as exception:
-            raise ODPAmsterdamResultsError(
-                f"No garage was found with id ({garage_id})"
-            ) from exception
+        for item in data["features"]:
+            if item["Id"] == garage_id:
+                return Garage.from_json(item)
+        msg = f"No garage was found with id - {garage_id}"
+        raise ODPAmsterdamResultsError(msg)
 
     async def close(self) -> None:
         """Close open client session."""
@@ -170,7 +181,8 @@ class ODPAmsterdam:
     async def __aenter__(self) -> ODPAmsterdam:
         """Async enter.
 
-        Returns:
+        Returns
+        -------
             The Open Data Platform Amsterdam object.
         """
         return self
@@ -179,6 +191,7 @@ class ODPAmsterdam:
         """Async exit.
 
         Args:
+        ----
             _exc_info: Exec type.
         """
         await self.close()

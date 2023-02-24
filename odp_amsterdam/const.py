@@ -20,6 +20,7 @@ FILTER_NAMES: list[str] = [
     " P21",
     " P22",
     " P23",
+    " P24",
 ]
 
 FILTER_UNKNOWN: list[str] = [
