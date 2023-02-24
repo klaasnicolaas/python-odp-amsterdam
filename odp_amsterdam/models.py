@@ -22,13 +22,14 @@ class ParkingSpot:
     coordinates: list[float]
 
     @classmethod
-    def from_json(cls, data: dict[str, Any]) -> ParkingSpot:
+    def from_json(cls: type[ParkingSpot], data: dict[str, Any]) -> ParkingSpot:
         """Return ParkingSpot object from a dictionary.
 
         Args:
             data: The JSON data from the API.
 
-        Returns:
+        Returns
+        -------
             An ParkingSpot object.
         """
         attr = data["properties"]
@@ -60,13 +61,14 @@ class Garage:
     latitude: float
 
     @classmethod
-    def from_json(cls, data: dict[str, Any]) -> Garage:
+    def from_json(cls: type[Garage], data: dict[str, Any]) -> Garage:
         """Return Garage object from a dictionary.
 
         Args:
             data: The JSON data from the API.
 
-        Returns:
+        Returns
+        -------
             An Garage object.
         """
         latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
@@ -84,7 +86,8 @@ class Garage:
             if attr["LongCapacity"] == ""
             else int(attr["LongCapacity"]),
             availability_pct=calculate_pct(
-                attr.get("FreeSpaceShort"), attr.get("ShortCapacity")
+                attr.get("FreeSpaceShort"),
+                attr.get("ShortCapacity"),
             ),
             longitude=longitude,
             latitude=latitude,
@@ -97,10 +100,10 @@ def split_coordinates(data: str) -> tuple[float, float]:
     Args:
         data: The data to be split.
 
-    Returns:
+    Returns
+    -------
         The coordinates.
     """
-
     longitude, latitude = data.split(", ")
     longitude = longitude.replace("[", "")
     latitude = latitude.replace("]", "")
@@ -114,7 +117,8 @@ def calculate_pct(current: int, total: int) -> float | None:
         current: The current amount of free parking spots.
         total: The total amount of parking spots.
 
-    Returns:
+    Returns
+    -------
         The percentage of free parking spots.
     """
     try:
@@ -129,10 +133,10 @@ def correct_name(name: str) -> str:
     Args:
         name: The name of the parking garage.
 
-    Returns:
+    Returns
+    -------
         The corrected name.
     """
-
     for value in FILTER_NAMES:
         # Remove parts from name string.
         name = name.replace(value, "")
@@ -149,7 +153,8 @@ def filter_unknown(data: str) -> str | None:
     Args:
         data: The data to be filtered.
 
-    Returns:
+    Returns
+    -------
         The filtered data.
     """
     if data in FILTER_UNKNOWN:

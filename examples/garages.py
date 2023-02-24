@@ -11,12 +11,11 @@ async def main() -> None:
     async with ODPAmsterdam() as client:
         count: int
 
-        garages: list[Garage] = await client.all_garages()
-        locations = await client.locations(limit=10, parking_type="E6a")
-        garage = await client.garage(garage_id="99b77fc5-a237-4ba0-abe4-b9a3886aa471")
+        garages = await client.all_garages()
+        garage: Garage = await client.garage(
+            garage_id="99b77fc5-a237-4ba0-abe4-b9a3886aa471",
+        )
 
-        print(locations)
-        print()
         print(garage)
         print()
 
@@ -31,7 +30,7 @@ async def main() -> None:
         num_values = len(set(unique_values))
 
         print("__________________________")
-        print(f"Total locations found: {count}")
+        print(f"Total garages found: {count}")
         print(f"Unique ID values: {num_values}")
 
 
