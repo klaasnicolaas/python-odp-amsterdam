@@ -41,16 +41,17 @@ class ODPAmsterdam:
         """Handle a request to the Open Data Platform API of Amsterdam.
 
         Args:
+        ----
             uri: Request URI, without '/', for example, 'status'
             method: HTTP method to use, for example, 'GET'
             params: Extra options to improve or limit the response.
 
-        Returns
+        Returns:
         -------
             A Python dictionary (text) with the response from
             the Open Data Platform API of Amsterdam.
 
-        Raises
+        Raises:
         ------
             ODPAmsterdamConnectionError: An error occurred while
                 communicating with the Open Data Platform API of Amsterdam.
@@ -112,10 +113,11 @@ class ODPAmsterdam:
         """Get all the parking locations.
 
         Args:
+        ----
             limit: The number of results to return.
             parking_type: The selected parking type number.
 
-        Returns
+        Returns:
         -------
             A list of ParkingSpot objects.
         """
@@ -156,13 +158,14 @@ class ODPAmsterdam:
         """Get info from a single parking garage.
 
         Args:
+        ----
             garage_id: The ID of the garage.
 
-        Returns
+        Returns:
         -------
             A garage object.
 
-        Raises
+        Raises:
         ------
             ODPAmsterdamResultsError: When no results are found.
         """
