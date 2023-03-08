@@ -26,9 +26,10 @@ class ParkingSpot:
         """Return ParkingSpot object from a dictionary.
 
         Args:
+        ----
             data: The JSON data from the API.
 
-        Returns
+        Returns:
         -------
             An ParkingSpot object.
         """
@@ -65,9 +66,10 @@ class Garage:
         """Return Garage object from a dictionary.
 
         Args:
+        ----
             data: The JSON data from the API.
 
-        Returns
+        Returns:
         -------
             An Garage object.
         """
@@ -98,9 +100,10 @@ def split_coordinates(data: str) -> tuple[float, float]:
     """Split the coordinate data in separate variables.
 
     Args:
+    ----
         data: The data to be split.
 
-    Returns
+    Returns:
     -------
         The coordinates.
     """
@@ -114,10 +117,11 @@ def calculate_pct(current: int, total: int) -> float | None:
     """Calculate the percentage of free parking spots.
 
     Args:
+    ----
         current: The current amount of free parking spots.
         total: The total amount of parking spots.
 
-    Returns
+    Returns:
     -------
         The percentage of free parking spots.
     """
@@ -131,9 +135,10 @@ def correct_name(name: str) -> str:
     """Change parking garage name for consistency if needed.
 
     Args:
+    ----
         name: The name of the parking garage.
 
-    Returns
+    Returns:
     -------
         The corrected name.
     """
@@ -151,9 +156,10 @@ def filter_unknown(data: str) -> str | None:
     """Filter unknown data from the API.
 
     Args:
+    ----
         data: The data to be filtered.
 
-    Returns
+    Returns:
     -------
         The filtered data.
     """
