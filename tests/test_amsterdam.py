@@ -50,6 +50,7 @@ async def test_internal_session(aresponses: ResponsesMockServer) -> None:
 
 async def test_timeout(aresponses: ResponsesMockServer) -> None:
     """Test request timeout from the Open Data Platform API of Amsterdam."""
+
     # Faking a timeout by sleeping
     async def response_handler(_: ClientResponse) -> Response:
         await asyncio.sleep(0.2)
