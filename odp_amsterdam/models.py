@@ -80,13 +80,9 @@ class Garage:
             garage_name=correct_name(data["properties"]["Name"]),
             state=attr.get("State"),
             free_space_short=int(attr["FreeSpaceShort"]),
-            free_space_long=None
-            if attr["FreeSpaceLong"] == ""
-            else int(attr["FreeSpaceLong"]),
+            free_space_long=set_long_parking(attr["FreeSpaceLong"]),
             short_capacity=int(attr["ShortCapacity"]),
-            long_capacity=None
-            if attr["LongCapacity"] == ""
-            else int(attr["LongCapacity"]),
+            long_capacity=set_long_parking(attr["LongCapacity"]),
             availability_pct=calculate_pct(
                 attr.get("FreeSpaceShort"),
                 attr.get("ShortCapacity"),
@@ -94,6 +90,20 @@ class Garage:
             longitude=longitude,
             latitude=latitude,
         )
+
+
+def set_long_parking(data: str) -> int | None:
+    """Set the long parking capacity/free space value.
+
+    Args:
+    ----
+        data: The data to be set.
+
+    Returns:
+    -------
+        The long parking capacity/free space.
+    """
+    return None if not data else int(data)
 
 
 def split_coordinates(data: str) -> tuple[float, float]:
