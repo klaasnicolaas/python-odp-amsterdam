@@ -42,7 +42,7 @@ class ParkingSpot:
             street=filter_unknown(attr["straatnaam"]),
             number=int(attr["aantal"]),
             orientation=filter_unknown(attr["type"]),
-            coordinates=data["geometry"]["coordinates"],
+            coordinates=data["geometry"]["coordinates"][0],
         )
 
 
