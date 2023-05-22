@@ -20,7 +20,7 @@ async def main() -> None:
             count = index
             print(item)
 
-        # # Count unique id's in disabled_parkings
+        # Count unique id's in disabled_parkings
         unique_values: list[str] = []
         for location in locations:
             unique_values.append(location.spot_id)
