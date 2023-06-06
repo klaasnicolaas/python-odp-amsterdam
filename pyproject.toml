@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 packages = [
-    { include = "odp_amsterdam" }
+    { include = "odp_amsterdam", from = "src" },
 ]
 
 [tool.poetry.dependencies]
