@@ -22,11 +22,12 @@ async def main() -> None:
             print(item)
 
         # Count unique id's in disabled_parkings
-        unique_values: list[str] = list({garage.garage_id for garage in garages})
+        unique_values: list[str] = [str(item.garage_id) for item in garages]
+        num_values = len(set(unique_values))
 
         print("__________________________")
         print(f"Total garages found: {count}")
-        print(f"Unique ID values: {len(unique_values)}")
+        print(f"Unique ID values: {num_values}")
 
 
 if __name__ == "__main__":
