@@ -117,15 +117,11 @@ class ODPAmsterdam:
         -------
             A list of ParkingSpot objects.
         """
-        results: list[ParkingSpot] = []
         locations = await self._request(
             "v1/parkeervakken/parkeervakken",
             params={"_pageSize": limit, "eType": parking_type, "_format": "geojson"},
         )
-
-        for item in locations["features"]:
-            results.append(ParkingSpot.from_json(item))
-        return results
+        return [ParkingSpot.from_json(item) for item in locations["features"]]
 
     async def all_garages(self) -> list[Garage]:
         """Get all the garages.
@@ -138,16 +134,17 @@ class ODPAmsterdam:
         ------
             ODPAmsterdamError: If the data is not valid.
         """
-        results: list[Garage] = []
         data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
 
-        for item in data["features"]:
-            try:
-                if not any(x in item["properties"]["Name"] for x in FILTER_OUT):
-                    results.append(Garage.from_json(item))
-            except KeyError as exception:
-                msg = f"Got wrong data from the API: {item}"
-                raise ODPAmsterdamError(msg) from exception
+        try:
+            results = [
+                Garage.from_json(item)
+                for item in data["features"]
+                if not any(x in item["properties"]["Name"] for x in FILTER_OUT)
+            ]
+        except KeyError as exception:
+            msg = f"Got wrong data from the API: {exception}"
+            raise ODPAmsterdamError(msg) from exception
         return results
 
     async def garage(self, garage_id: str) -> Garage:
