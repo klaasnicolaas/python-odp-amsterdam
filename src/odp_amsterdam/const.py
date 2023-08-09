@@ -1,4 +1,5 @@
 """Asynchronous Python client providing Open Data information of Amsterdam."""
+from __future__ import annotations
 
 FILTER_OUT: list[str] = [
     "FP",

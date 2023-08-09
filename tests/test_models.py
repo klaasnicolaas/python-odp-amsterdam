@@ -1,4 +1,6 @@
 """Test the models."""
+from __future__ import annotations
+
 import pytest
 from aiohttp import ClientSession
 from aresponses import ResponsesMockServer
