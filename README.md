@@ -60,6 +60,7 @@ Read the occupancy of a parking garage in Amsterdam (The Netherlands), both for 
 | `availability_pct` | float | The percentage of free parking spaces |
 | `longitude` | float | The longitude of the garage |
 | `latitude` | float | The latitude of the garage |
+| `updated_at` | datetime | The last time the data was updated |
 
 ### Parking locations
 
