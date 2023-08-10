@@ -151,7 +151,7 @@ class ODPAmsterdam:
         return results
 
     async def garage(self, garage_id: str) -> Garage:
-        """Get info from a single parking garage.
+        """Get info from a single  garage.
 
         Args:
         ----

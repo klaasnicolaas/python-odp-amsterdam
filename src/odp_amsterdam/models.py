@@ -2,7 +2,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
+
+import pytz
 
 from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
 
@@ -58,8 +61,10 @@ class Garage:
     short_capacity: int
     long_capacity: int | None
     availability_pct: float | None
+
     longitude: float
     latitude: float
+    updated_at: datetime
 
     @classmethod
     def from_json(cls: type[Garage], data: dict[str, Any]) -> Garage:
@@ -89,6 +94,10 @@ class Garage:
             ),
             longitude=longitude,
             latitude=latitude,
+            updated_at=datetime.strptime(
+                attr["PubDate"],
+                "%Y-%m-%dT%H:%M:%SZ",
+            ).replace(tzinfo=pytz.timezone("UTC")),
         )
 
 
