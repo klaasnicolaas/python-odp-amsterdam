@@ -44,14 +44,21 @@ You can read the following datasets with this package:
 
 ### Parking garages
 
-Read the occupancy of a parking garage in Amsterdam (The Netherlands), both for day visitors (short-term parking) and season ticket holders (long-term parking).
+Read the occupancy of a garage in Amsterdam (The Netherlands), both for day visitors (short-term parking) and season ticket holders (long-term parking). The dataset gives garages for 🚲 bicycles (we ❤️ bikes) and for 🚗 cars
 
-**NOTE**: Not all parking garages have data for long-term parking.
+**NOTE**: Not all garages have data for long-term parking.
+
+You can use the following parameters in your request:
+
+- **vehicle** - Filter based on the type of vehicle that can park in the garage (`car` or `bicycle`).
+- **category** - Filter based on the category of the garage (`garage` or `park_and_ride`).
 
 | Variable | Type | Description |
 | :------- | :--- | :---------- |
 | `garage_id` | string | The id of the garage |
 | `garage_name` | string | The name of the garage |
+| `vehicle` | string | The type of vehicle that can park in the garage |
+| `category` | string | The category of the garage (`garage` or `park_and_ride`) |
 | `state` | string | The state of the garage (`ok` or `problem`) |
 | `free_space_short` | integer | The number of free spaces for day visitors |
 | `free_space_long` | integer (or None) | The number of free spaces for season ticket holders |
