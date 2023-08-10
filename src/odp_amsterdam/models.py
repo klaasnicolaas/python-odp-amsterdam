@@ -53,16 +53,12 @@ class ParkingSpot:
 class VehicleType(str, Enum):
     """Enumeration representing the vehicle type."""
 
-    __slots__ = ()
-
     CAR = "car"
     BICYCLE = "bicycle"
 
 
 class GarageCategory(str, Enum):
     """Enumeration representing the garage category."""
-
-    __slots__ = ()
 
     GARAGE = "garage"
     PARK_AND_RIDE = "park_and_ride"
