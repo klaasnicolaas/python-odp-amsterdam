@@ -126,7 +126,11 @@ class ODPAmsterdam:
         )
         return [ParkingSpot.from_json(item) for item in locations["features"]]
 
-    async def all_garages(self) -> list[Garage]:
+    async def all_garages(
+        self,
+        vehicle: str | None = None,
+        category: str | None = None,
+    ) -> list[Garage]:
         """Get all the garages.
 
         Returns
@@ -140,7 +144,7 @@ class ODPAmsterdam:
         data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
 
         try:
-            results = [
+            results: list[Garage] = [
                 Garage.from_json(item)
                 for item in data["features"]
                 if not any(x in item["properties"]["Name"] for x in FILTER_OUT)
@@ -148,6 +152,12 @@ class ODPAmsterdam:
         except KeyError as exception:
             msg = f"Got wrong data from the API: {exception}"
             raise ODPAmsterdamError(msg) from exception
+
+        # Filter on vehicle type and category
+        if vehicle:
+            results = list(filter(lambda x: x.vehicle == vehicle, results))
+        if category:
+            results = list(filter(lambda x: x.category == category, results))
         return results
 
     async def garage(self, garage_id: str) -> Garage:

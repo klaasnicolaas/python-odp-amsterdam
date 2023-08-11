@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 FILTER_OUT: list[str] = [
-    "FP",
-    "Fiets",
     "Dummy",
 ]
 
@@ -22,6 +20,9 @@ FILTER_NAMES: list[str] = [
     " P22",
     " P23",
     " P24",
+    "PR-",
+    "DP-",
+    "AM-",
 ]
 
 FILTER_UNKNOWN: list[str] = [
