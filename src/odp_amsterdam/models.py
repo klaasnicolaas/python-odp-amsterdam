@@ -53,8 +53,9 @@ class ParkingSpot:
 class VehicleType(str, Enum):
     """Enumeration representing the vehicle type."""
 
-    CAR = "car"
     BICYCLE = "bicycle"
+    CAR = "car"
+    TOURINGCAR = "touringcar"
 
 
 class GarageCategory(str, Enum):
@@ -199,6 +200,8 @@ def get_vehicle_type(name: str) -> VehicleType:
     """
     if "-FP" in name:
         return VehicleType.BICYCLE
+    if "PT" in name:
+        return VehicleType.TOURINGCAR
     return VehicleType.CAR
 
 

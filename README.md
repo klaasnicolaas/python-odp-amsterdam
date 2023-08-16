@@ -50,7 +50,7 @@ Read the occupancy of a garage in Amsterdam (The Netherlands), both for day visi
 
 You can use the following parameters in your request:
 
-- **vehicle** - Filter based on the type of vehicle that can park in the garage (`car` or `bicycle`).
+- **vehicle** - Filter based on the type of vehicle that can park in the garage (`car`, `bicycle` or `touringcar`).
 - **category** - Filter based on the category of the garage (`garage` or `park_and_ride`).
 
 | Variable | Type | Description |
