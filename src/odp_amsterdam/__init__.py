@@ -5,14 +5,16 @@ from .exceptions import (
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
 )
-from .models import Garage, ParkingSpot
+from .models import Garage, GarageCategory, ParkingSpot, VehicleType
 from .odp_amsterdam import ODPAmsterdam
 
 __all__ = [
     "Garage",
-    "ParkingSpot",
+    "GarageCategory",
     "ODPAmsterdam",
+    "ODPAmsterdamConnectionError",
     "ODPAmsterdamError",
     "ODPAmsterdamResultsError",
-    "ODPAmsterdamConnectionError",
+    "ParkingSpot",
+    "VehicleType",
 ]
