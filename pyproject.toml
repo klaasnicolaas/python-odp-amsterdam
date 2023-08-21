@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "odp-amsterdam"
-version = "0.0.0"
+version = "5.3.1"
 description = "Asynchronous Python client providing Open Data information of Amsterdam"
 authors = ["Klaas Schoute <hello@student-techlife.com>"]
 maintainers = ["Klaas Schoute <hello@student-techlife.com>"]
