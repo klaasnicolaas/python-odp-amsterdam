@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "odp-amsterdam"
-version = "5.3.1"
+version = "0.0.0"
 description = "Asynchronous Python client providing Open Data information of Amsterdam"
 authors = ["Klaas Schoute <hello@student-techlife.com>"]
 maintainers = ["Klaas Schoute <hello@student-techlife.com>"]
@@ -15,9 +15,8 @@ classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
@@ -27,7 +26,7 @@ packages = [
 
 [tool.poetry.dependencies]
 aiohttp = ">=3.0.0"
-python = "^3.9"
+python = "^3.11"
 pytz = "^2023.3"
 yarl = ">=1.6.0"
 
@@ -66,7 +65,7 @@ show_missing = true
 # free to run mypy on Windows, Linux, or macOS and get consistent
 # results.
 platform = "linux"
-python_version = "3.9"
+python_version = "3.11"
 
 # flake8-mypy expects the two following for sensible formatting
 show_column_numbers = true
