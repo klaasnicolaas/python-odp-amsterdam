@@ -231,7 +231,7 @@ SOFTWARE.
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
 [maintainability-shield]: https://api.codeclimate.com/v1/badges/72d6baa9151bb0b0cfdf/maintainability
 [maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-odp-amsterdam/maintainability
-[project-stage-shield]: https://img.shields.io/badge/project%20stage-experimental-yellow.svg
+[project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
 [pypi]: https://pypi.org/project/odp-amsterdam/
 [python-versions-shield]: https://img.shields.io/pypi/pyversions/odp-amsterdam
 [typing-shield]: https://github.com/klaasnicolaas/python-odp-amsterdam/actions/workflows/typing.yaml/badge.svg
