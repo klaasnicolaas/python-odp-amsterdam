@@ -36,6 +36,7 @@ class ParkingSpot:
         Returns:
         -------
             An ParkingSpot object.
+
         """
         attr = data["properties"]
         regimes = attr["regimes"][0]
@@ -96,6 +97,7 @@ class Garage:
         Returns:
         -------
             An Garage object.
+
         """
         latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
         attr = data["properties"]
@@ -132,6 +134,7 @@ def set_long_parking(data: str) -> int | None:
     Returns:
     -------
         The long parking capacity/free space.
+
     """
     return None if not data else int(data)
 
@@ -146,6 +149,7 @@ def split_coordinates(data: str) -> tuple[float, float]:
     Returns:
     -------
         The coordinates.
+
     """
     longitude, latitude = data.split(", ")
     longitude = longitude.replace("[", "")
@@ -164,6 +168,7 @@ def calculate_pct(current: int, total: int) -> float | None:
     Returns:
     -------
         The percentage of free parking spots.
+
     """
     try:
         return round((float(current) / float(total)) * 100, 1)
@@ -181,6 +186,7 @@ def get_category(name: str) -> GarageCategory:
     Returns:
     -------
         The category name.
+
     """
     if "P+R" in name:
         return GarageCategory.PARK_AND_RIDE
@@ -197,6 +203,7 @@ def get_vehicle_type(name: str) -> VehicleType:
     Returns:
     -------
         The vehicle type.
+
     """
     if "-FP" in name:
         return VehicleType.BICYCLE
@@ -215,6 +222,7 @@ def correct_name(name: str) -> str:
     Returns:
     -------
         The corrected name.
+
     """
     for value in FILTER_NAMES:
         # Remove parts from name string.
@@ -244,6 +252,7 @@ def filter_unknown(data: str) -> str | None:
     Returns:
     -------
         The filtered data.
+
     """
     if data in FILTER_UNKNOWN:
         return None

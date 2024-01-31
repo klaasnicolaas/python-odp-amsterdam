@@ -56,6 +56,7 @@ class ODPAmsterdam:
                 communicating with the Open Data Platform API of Amsterdam.
             ODPAmsterdamError: Received an unexpected response from
                 the Open Data Platform API of Amsterdam.
+
         """
         version = metadata.version(__package__)
         url = URL.build(scheme="https", host="api.data.amsterdam.nl", path="/").join(
@@ -115,6 +116,7 @@ class ODPAmsterdam:
         Returns:
         -------
             A list of ParkingSpot objects.
+
         """
         locations = await self._request(
             "v1/parkeervakken/parkeervakken",
@@ -136,6 +138,7 @@ class ODPAmsterdam:
         Raises
         ------
             ODPAmsterdamError: If the data is not valid.
+
         """
         data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
 
@@ -170,6 +173,7 @@ class ODPAmsterdam:
         Raises:
         ------
             ODPAmsterdamResultsError: When no results are found.
+
         """
         data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
         for item in data["features"]:
@@ -189,6 +193,7 @@ class ODPAmsterdam:
         Returns
         -------
             The Open Data Platform Amsterdam object.
+
         """
         return self
 
@@ -198,5 +203,6 @@ class ODPAmsterdam:
         Args:
         ----
             _exc_info: Exec type.
+
         """
         await self.close()
