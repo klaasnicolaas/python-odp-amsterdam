@@ -11,6 +11,7 @@ repository = "https://github.com/klaasnicolaas/python-odp-amsterdam"
 documentation = "https://github.com/klaasnicolaas/python-odp-amsterdam"
 keywords = ["garages", "amsterdam", "car", "occupancy", "async", "client"]
 classifiers = [
+  "Development Status :: 5 - Production/Stable",
   "Framework :: AsyncIO",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: MIT License",
@@ -129,8 +130,8 @@ addopts = "--cov"
 asyncio_mode = "auto"
 
 [tool.ruff]
-select = ["ALL"]
-ignore = [
+lint.select = ["ALL"]
+lint.ignore = [
   "ANN101", # Self... explanatory
   "ANN401", # Opinioated warning on disallowing dynamically typed expressions
   "D203", # Conflicts with other rules
@@ -151,14 +152,14 @@ ignore = [
   "W191",
 ]
 
-[tool.ruff.flake8-pytest-style]
+[tool.ruff.lint.flake8-pytest-style]
 mark-parentheses = false
 fixture-parentheses = false
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["odp_amsterdam"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 25
 
 [build-system]
