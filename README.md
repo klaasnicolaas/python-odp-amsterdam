@@ -229,7 +229,7 @@ SOFTWARE.
 [license-shield]: https://img.shields.io/github/license/klaasnicolaas/python-odp-amsterdam.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/klaasnicolaas/python-odp-amsterdam.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2024.svg
-[maintainability-shield]: https://api.codeclimate.com/v1/badges/72d6baa9151bb0b0cfdf/maintainability
+[maintainability-shield]: https://api.codeclimate.com/v1/badges/44c53d62dff1d3013e42/maintainability
 [maintainability-url]: https://codeclimate.com/github/klaasnicolaas/python-odp-amsterdam/maintainability
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
 [pypi]: https://pypi.org/project/odp-amsterdam/
