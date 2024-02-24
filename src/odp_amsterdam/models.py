@@ -2,11 +2,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
-
-import pytz
 
 from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
 
@@ -120,7 +118,7 @@ class Garage:
             updated_at=datetime.strptime(
                 attr["PubDate"],
                 "%Y-%m-%dT%H:%M:%SZ",
-            ).replace(tzinfo=pytz.timezone("UTC")),
+            ).replace(tzinfo=UTC),
         )
 
 
