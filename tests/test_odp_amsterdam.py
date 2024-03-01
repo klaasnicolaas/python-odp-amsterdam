@@ -1,4 +1,5 @@
 """Basic tests for the Open Data Platform API of Amsterdam."""
+
 # pylint: disable=protected-access
 import asyncio
 from unittest.mock import patch
@@ -92,9 +93,12 @@ async def test_client_error() -> None:
     """Test request client error from the Open Data Platform API of Amsterdam."""
     async with ClientSession() as session:
         client = ODPAmsterdam(session=session)
-        with patch.object(
-            session,
-            "request",
-            side_effect=ClientError,
-        ), pytest.raises(ODPAmsterdamConnectionError):
+        with (
+            patch.object(
+                session,
+                "request",
+                side_effect=ClientError,
+            ),
+            pytest.raises(ODPAmsterdamConnectionError),
+        ):
             assert await client._request("test")
