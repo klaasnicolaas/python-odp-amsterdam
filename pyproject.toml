@@ -93,6 +93,9 @@ warn_return_any = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
+[tool.pylint.MASTER]
+ignore = ["tests"]
+
 [tool.pylint.BASIC]
 good-names = ["_", "ex", "fp", "i", "id", "j", "k", "on", "Run", "T"]
 
