@@ -26,7 +26,7 @@ VERSION = metadata.version(__package__)
 
 @dataclass
 class ODPAmsterdam:
-    """Main class for handling data fetchting from Open Data Platform of Amsterdam."""
+    """Main class for handling data fetching from Open Data Platform of Amsterdam."""
 
     request_timeout: float = 15.0
     session: ClientSession | None = None
