@@ -21,10 +21,12 @@ from .exceptions import (
 )
 from .models import Garage, ParkingSpot
 
+VERSION = metadata.version(__package__)
+
 
 @dataclass
 class ODPAmsterdam:
-    """Main class for handling data fetchting from Open Data Platform of Amsterdam."""
+    """Main class for handling data fetching from Open Data Platform of Amsterdam."""
 
     request_timeout: float = 15.0
     session: ClientSession | None = None
@@ -59,14 +61,13 @@ class ODPAmsterdam:
                 the Open Data Platform API of Amsterdam.
 
         """
-        version = metadata.version(__package__)
         url = URL.build(scheme="https", host="api.data.amsterdam.nl", path="/").join(
             URL(uri),
         )
 
         headers = {
             "Accept": "application/json, text/plain, application/geo+json",
-            "User-Agent": f"PythonODPAmsterdam/{version}",
+            "User-Agent": f"PythonODPAmsterdam/{VERSION}",
         }
 
         if self.session is None:
