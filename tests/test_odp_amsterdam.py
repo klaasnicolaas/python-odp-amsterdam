@@ -29,7 +29,7 @@ async def test_json_request(
             text=load_fixtures("garages.json"),
         ),
     )
-    response = await odp_amsterdam_client._request("test")
+    response = await odp_amsterdam_client._request("https://api.data.amsterdam.nl/test")
     assert response is not None
     await odp_amsterdam_client.close()
 
@@ -47,7 +47,7 @@ async def test_internal_session(aresponses: ResponsesMockServer) -> None:
         ),
     )
     async with ODPAmsterdam() as client:
-        await client._request("test")
+        await client._request("https://api.data.amsterdam.nl/test")
 
 
 async def test_timeout(aresponses: ResponsesMockServer) -> None:

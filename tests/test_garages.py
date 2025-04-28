@@ -16,8 +16,8 @@ async def test_wrong_garage_model(
 ) -> None:
     """Test a wrong garage model."""
     aresponses.add(
-        "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
+        "p-info.vorin-amsterdam.nl",
+        "/v1/ParkingLocation.json",
         "GET",
         aresponses.Response(
             status=200,
@@ -35,8 +35,8 @@ async def test_no_garage_found(
 ) -> None:
     """Test a wrong garage model."""
     aresponses.add(
-        "api.data.amsterdam.nl",
-        "/dcatd/datasets/9ORkef6T-aU29g/purls/1",
+        "p-info.vorin-amsterdam.nl",
+        "/v1/ParkingLocation.json",
         "GET",
         aresponses.Response(
             status=200,

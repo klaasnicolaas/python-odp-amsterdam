@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+PARKING_GARAGE_URL = "https://p-info.vorin-amsterdam.nl/v1/ParkingLocation.json"
+PARKING_SPOT_URL = "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken"
+
 FILTER_OUT: list[str] = [
     "Dummy",
 ]

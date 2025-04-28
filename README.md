@@ -214,7 +214,7 @@ SOFTWARE.
 
 [api]: https://api.data.amsterdam.nl
 [nipkaart]: https://www.nipkaart.nl
-[garages]: https://data.amsterdam.nl/datasets/9ORkef6T-aU29g/actuele-beschikbaarheid-parkeergarages/
+[garages]: https://p-info.vorin-amsterdam.nl/v1/ParkingLocation.json
 [parking]: https://api.data.amsterdam.nl/v1/docs/datasets/parkeervakken.html
 
 <!-- MARKDOWN LINKS & IMAGES -->
