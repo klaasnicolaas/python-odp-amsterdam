@@ -7,6 +7,7 @@ PARKING_SPOT_URL = "https://api.data.amsterdam.nl/v1/parkeervakken/parkeervakken
 
 FILTER_OUT: list[str] = [
     "Dummy",
+    "Test_Dome",
 ]
 
 FILTER_NAMES: list[str] = [
