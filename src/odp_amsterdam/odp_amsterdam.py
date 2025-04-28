@@ -13,7 +13,7 @@ from aiohttp import ClientError, ClientSession
 from aiohttp.hdrs import METH_GET
 from yarl import URL
 
-from .const import FILTER_OUT
+from .const import FILTER_OUT, PARKING_GARAGE_URL, PARKING_SPOT_URL
 from .exceptions import (
     ODPAmsterdamConnectionError,
     ODPAmsterdamError,
@@ -35,7 +35,8 @@ class ODPAmsterdam:
 
     async def _request(
         self,
-        uri: str,
+        # uri: str,
+        url: str,
         *,
         method: str = METH_GET,
         params: dict[str, Any] | None = None,
@@ -44,7 +45,7 @@ class ODPAmsterdam:
 
         Args:
         ----
-            uri: Request URI, without '/', for example, 'status'
+            url: The URL to the Open Data Platform API of Amsterdam.
             method: HTTP method to use, for example, 'GET'
             params: Extra options to improve or limit the response.
 
@@ -61,9 +62,7 @@ class ODPAmsterdam:
                 the Open Data Platform API of Amsterdam.
 
         """
-        url = URL.build(scheme="https", host="api.data.amsterdam.nl", path="/").join(
-            URL(uri),
-        )
+        full_url = URL(url)
 
         headers = {
             "Accept": "application/json, text/plain, application/geo+json",
@@ -78,7 +77,7 @@ class ODPAmsterdam:
             async with asyncio.timeout(self.request_timeout):
                 response = await self.session.request(
                     method,
-                    url,
+                    full_url,
                     params=params,
                     headers=headers,
                     ssl=True,
@@ -121,7 +120,7 @@ class ODPAmsterdam:
 
         """
         locations = await self._request(
-            "v1/parkeervakken/parkeervakken",
+            PARKING_SPOT_URL,
             params={"_pageSize": limit, "eType": parking_type, "_format": "geojson"},
         )
         return [ParkingSpot.from_json(item) for item in locations["features"]]
@@ -142,8 +141,7 @@ class ODPAmsterdam:
             ODPAmsterdamError: If the data is not valid.
 
         """
-        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
-
+        data = await self._request(PARKING_GARAGE_URL)
         try:
             results: list[Garage] = [
                 Garage.from_json(item)
@@ -177,7 +175,7 @@ class ODPAmsterdam:
             ODPAmsterdamResultsError: When no results are found.
 
         """
-        data = await self._request("dcatd/datasets/9ORkef6T-aU29g/purls/1")
+        data = await self._request(PARKING_GARAGE_URL)
         for item in data["features"]:
             if item["Id"] == garage_id:
                 return Garage.from_json(item)
