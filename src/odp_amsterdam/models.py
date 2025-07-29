@@ -75,9 +75,9 @@ class Garage:
     category: GarageCategory
     state: str
 
-    free_space_short: int
+    free_space_short: int | None
     free_space_long: int | None
-    short_capacity: int
+    short_capacity: int | None
     long_capacity: int | None
     availability_pct: float | None
 
@@ -106,13 +106,13 @@ class Garage:
             vehicle=get_vehicle_type(attr["Name"]),
             category=get_category(attr["Name"]),
             state=attr.get("State"),
-            free_space_short=int(attr["FreeSpaceShort"]),
-            free_space_long=set_long_parking(attr["FreeSpaceLong"]),
-            short_capacity=int(attr["ShortCapacity"]),
-            long_capacity=set_long_parking(attr["LongCapacity"]),
+            free_space_short=parse_int(attr["FreeSpaceShort"]),
+            free_space_long=parse_int(attr["FreeSpaceLong"]),
+            short_capacity=parse_int(attr["ShortCapacity"]),
+            long_capacity=parse_int(attr["LongCapacity"]),
             availability_pct=calculate_pct(
-                attr.get("FreeSpaceShort"),
-                attr.get("ShortCapacity"),
+                parse_int(attr.get("FreeSpaceShort")),
+                parse_int(attr.get("ShortCapacity")),
             ),
             longitude=longitude,
             latitude=latitude,
@@ -121,21 +121,6 @@ class Garage:
                 "%Y-%m-%dT%H:%M:%SZ",
             ).replace(tzinfo=UTC),
         )
-
-
-def set_long_parking(data: str) -> int | None:
-    """Set the long parking capacity/free space value.
-
-    Args:
-    ----
-        data: The data to be set.
-
-    Returns:
-    -------
-        The long parking capacity/free space.
-
-    """
-    return None if not data else int(data)
 
 
 def split_coordinates(data: str) -> tuple[float, float]:
@@ -156,7 +141,15 @@ def split_coordinates(data: str) -> tuple[float, float]:
     return float(latitude), float(longitude)
 
 
-def calculate_pct(current: int, total: int) -> float | None:
+def parse_int(data: str) -> int | None:
+    """Try to parse a string to int, return None if not possible."""
+    return None if not data or not data.strip().isdigit() else int(data)
+
+
+def calculate_pct(
+    current: int | None,
+    total: int | None,
+) -> float | None:
     """Calculate the percentage of free parking spots.
 
     Args:
@@ -169,10 +162,9 @@ def calculate_pct(current: int, total: int) -> float | None:
         The percentage of free parking spots.
 
     """
-    try:
-        return round((float(current) / float(total)) * 100, 1)
-    except ZeroDivisionError:
+    if current is None or total is None or total == 0:
         return None
+    return round(int(current) / int(total) * 100, 1)
 
 
 def get_category(name: str) -> GarageCategory:
