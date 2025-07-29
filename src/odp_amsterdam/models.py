@@ -234,17 +234,7 @@ def correct_name(name: str) -> str:
 
 
 def filter_unknown(data: str) -> str | None:
-    """Filter unknown data from the API.
-
-    Args:
-    ----
-        data: The data to be filtered.
-
-    Returns:
-    -------
-        The filtered data.
-
-    """
+    """Filter unknown values from the data."""
     if data in FILTER_UNKNOWN:
         return None
     return data
