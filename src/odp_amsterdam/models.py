@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import enum
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from enum import Enum
 from typing import Any
 
 from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
@@ -50,7 +50,7 @@ class ParkingSpot:
         )
 
 
-class VehicleType(str, Enum):
+class VehicleType(enum.StrEnum):
     """Enumeration representing the vehicle type."""
 
     BICYCLE = "bicycle"
@@ -58,7 +58,7 @@ class VehicleType(str, Enum):
     TOURINGCAR = "touringcar"
 
 
-class GarageCategory(str, Enum):
+class GarageCategory(enum.StrEnum):
     """Enumeration representing the garage category."""
 
     GARAGE = "garage"
