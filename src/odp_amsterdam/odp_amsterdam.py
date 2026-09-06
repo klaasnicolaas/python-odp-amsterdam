@@ -21,7 +21,7 @@ from .exceptions import (
 )
 from .models import Garage, ParkingSpot
 
-VERSION = metadata.version(__package__)
+VERSION = metadata.version("odp-amsterdam")
 
 
 @dataclass
