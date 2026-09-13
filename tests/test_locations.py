@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from datetime import date
+from enum import IntEnum
 from typing import Any
 from unittest.mock import AsyncMock, patch
 
@@ -186,6 +187,10 @@ async def test_failure_after_first_page() -> None:
         {"limit": 0},
         {"limit": -1},
         {"limit": True},
+        {"limit": 1.5},
+        {"limit": "1"},
+        {"page_size": True},
+        {"page_size": 1.5},
         {"page_size": 0},
         {"page_size": 1001},
     ],
@@ -262,3 +267,29 @@ def test_malformed_regimes() -> None:
     source["properties"]["regimes"] = [None]
     with pytest.raises(ODPAmsterdamError):
         ParkingSpot.from_json(source)
+
+
+@pytest.mark.parametrize("value", ["not-a-date", "2026-02-30", "", 20260914])
+def test_invalid_source_date(value: Any) -> None:
+    """Direct model parsing raises the public package error for invalid dates."""
+    source = feature()
+    source["properties"]["versiedatum"] = value
+    with pytest.raises(ODPAmsterdamError, match="validity date") as error:
+        ParkingSpot.from_json(source)
+    assert isinstance(error.value.__cause__, (TypeError, ValueError))
+
+
+async def test_integer_subclass_bounds() -> None:
+    """Integer enum values are valid limits and page sizes."""
+
+    class Count(IntEnum):
+        ONE = 1
+
+    with patch.object(
+        ODPAmsterdam,
+        "_request",
+        new=AsyncMock(side_effect=[page(["001"], 1, size=1)] * 2),
+    ):
+        result = await ODPAmsterdam().locations(limit=Count.ONE, page_size=Count.ONE)
+    assert [record.spot_id for record in result.records] == ["001"]
+    assert result.complete

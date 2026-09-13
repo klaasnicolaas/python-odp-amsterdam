@@ -60,6 +60,14 @@ class ParkingSpot:
         ):
             msg = "Parking regimes must be a list of objects"
             raise ODPAmsterdamError(msg)
+        raw_date = attr.get("versiedatum")
+        try:
+            version_date = (
+                date.fromisoformat(raw_date) if raw_date is not None else None
+            )
+        except (TypeError, ValueError) as exception:
+            msg = "Parking dataset validity date must be an ISO date or null"
+            raise ODPAmsterdamError(msg) from exception
         return cls(
             spot_id=attr["id"],
             spot_type=attr["eType"] or None,
@@ -72,9 +80,7 @@ class ParkingSpot:
             coordinates=data["geometry"]["coordinates"][0],
             geometry=data["geometry"],
             regimes=regimes,
-            version_date=date.fromisoformat(attr["versiedatum"])
-            if attr.get("versiedatum")
-            else None,
+            version_date=version_date,
         )
 
 

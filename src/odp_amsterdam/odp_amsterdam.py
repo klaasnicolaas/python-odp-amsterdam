@@ -123,10 +123,16 @@ class ODPAmsterdam:
         duplicate IDs and changed totals raise ODPAmsterdamError; no partial
         success is returned. A finite limit may return complete=False.
         """
-        if limit is not None and (type(limit) is not int or limit < 1):
+        if limit is not None and (
+            isinstance(limit, bool) or not isinstance(limit, int) or limit < 1
+        ):
             msg = "limit must be a positive integer or None"
             raise ValueError(msg)
-        if type(page_size) is not int or not 1 <= page_size <= 1000:
+        if (
+            isinstance(page_size, bool)
+            or not isinstance(page_size, int)
+            or not 1 <= page_size <= 1000
+        ):
             msg = "page_size must be an integer between 1 and 1000"
             raise ValueError(msg)
         size = min(page_size, limit) if limit is not None else page_size
