@@ -9,7 +9,7 @@ on:
       - published
 
 env:
-  UV_PYTHON: "3.12"
+  DEFAULT_PYTHON: "3.12"
 
 permissions:
   contents: read
@@ -31,11 +31,7 @@ jobs:
         uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
           enable-cache: false
-      - name: 🏗 Set up Python ${{ env.UV_PYTHON }}
-        id: python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: ${{ env.UV_PYTHON }}
+          python-version: ${{ env.DEFAULT_PYTHON }}
       - name: 🏗 Set package version
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
