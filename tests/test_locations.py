@@ -45,6 +45,7 @@ async def test_paginated_locations(aresponses: ResponsesMockServer) -> None:
     async def handler(request: Request) -> Response:
         assert request.headers["Accept-Crs"] == "EPSG:4326"
         assert request.headers["Accept"] == "application/hal+json"
+        assert request.headers["User-Agent"].startswith("PythonODPAmsterdam/")
         queries.append(dict(request.query))
         return Response(
             text=json.dumps(responses.pop(0)), content_type="application/hal+json"

@@ -89,28 +89,9 @@ You can use the following parameters in your request:
 | `version_date` | date (or None) | Dataset validity date; not a field observation or individual record update |
 </details>
 
-### Migration: parking result and default limit
+`locations()` returns a `ParkingLocations` result with `records`, `total_count`, `pages_fetched` and `complete`. Without a limit it retrieves the full selection; with `limit=10` it returns at most ten records. `pages_fetched` excludes the final source verification request.
 
-This is a breaking change for the next major release. `locations()` now returns `ParkingLocations`, not a list, and its default `limit=None` retrieves the complete selection. There is no separate `all_locations()` method.
-
-```python
-result = await client.locations(parking_type="E6a")
-for location in result.records:
-    print(location.spot_id, location.regimes)
-print(result.total_count, result.pages_fetched, result.complete)
-
-sample = await client.locations(limit=10, parking_type="E6a")
-```
-
-Change iteration and `len(result)` to `result.records` and `len(result.records)`. Pass `limit=10` explicitly to retain the previous small-request behavior. `number` now preserves fractional estimates instead of truncating them. `spot_description` remains a first-regime summary; use `regimes` for all restrictions. The package does not interpret whether parking is currently permitted or available.
-
-`complete` means that the unique received records match the source's reported selection total. Limited results can be incomplete. An empty source with a verified zero total is complete; deciding whether to accept an empty import belongs to the caller. Pages are ordered by source ID, checked for missing/duplicate records and changing totals, then followed by a one-record recheck of the total and first record's identity/dataset date. `pages_fetched` excludes this final verification request. A limited fetch can read the remainder of its last page but returns no more than `limit` records.
-
-Missing metadata, malformed records, inconsistent pages or changed totals raise `ODPAmsterdamError`. Network errors propagate without returning a partial result. These checks do not guarantee an atomic snapshot: equal counts and dates cannot reveal every concurrent source edit. Original geometry and regimes are available for downstream validation; full geometric validity and parking-policy interpretation remain the caller's responsibility.
-
-Amsterdam [announces API-key requirements](https://api.data.amsterdam.nl/v1/docs/generic/rest/index.html). A caller-provided `aiohttp.ClientSession` can supply the documented `X-Api-Key` default header; use that session only for Amsterdam parking requests, since default session headers also apply to other endpoints. Keep keys outside source code. See [official key usage](https://keys.api.data.amsterdam.nl/clients/v1/docs/).
-
-Offline tests do not detect a changing municipal API. A separate bounded live smoke check should verify actual retrieval when releasing or investigating a source issue; ordinary PR tests stay offline.
+`complete` indicates that all records reported by the source were received, including a verified empty selection. Inconsistent pages or changing totals raise `ODPAmsterdamError`. This does not guarantee an atomic source snapshot or current parking availability; inspect `regimes` for restrictions.
 
 ## Usage
 
@@ -124,15 +105,14 @@ async def main():
     """Show example on using the ODP Amsterdam API client."""
     async with ODPAmsterdam() as client:
         # Parking locations
-        locations: list[ParkingSpot] = await client.location(
-            limit=5, parking_type="E6a"
-        )
+        locations = await client.locations(limit=5, parking_type="E6a")
 
         # Garages
-        all_garages: list[Garage] = await client.all_garages()
-        garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
+        all_garages = await client.all_garages()
+        garage = await client.garage(garage_id="ID_OF_GARAGE")
 
-        print(locations)
+        print(locations.records)
+        print(locations.total_count, locations.complete)
         print(all_garages)
         print(garage)
 

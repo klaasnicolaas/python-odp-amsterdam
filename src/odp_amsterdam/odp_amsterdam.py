@@ -40,6 +40,7 @@ class ODPAmsterdam:
         *,
         method: str = METH_GET,
         params: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
     ) -> Any:
         """Handle a request to the Open Data Platform API of Amsterdam.
 
@@ -48,6 +49,7 @@ class ODPAmsterdam:
             url: The URL to the Open Data Platform API of Amsterdam.
             method: HTTP method to use, for example, 'GET'
             params: Extra options to improve or limit the response.
+            headers: Request-specific overrides for the default headers.
 
         Returns:
         -------
@@ -64,14 +66,11 @@ class ODPAmsterdam:
         """
         full_url = URL(url)
 
-        headers = {
+        request_headers = {
             "Accept": "application/json, text/plain, application/geo+json",
             "User-Agent": f"PythonODPAmsterdam/{VERSION}",
+            **(headers or {}),
         }
-
-        if full_url == URL(PARKING_SPOT_URL):
-            headers["Accept-Crs"] = "EPSG:4326"
-            headers["Accept"] = "application/hal+json"
 
         if self.session is None:
             self.session = ClientSession()
@@ -83,7 +82,7 @@ class ODPAmsterdam:
                     method,
                     full_url,
                     params=params,
-                    headers=headers,
+                    headers=request_headers,
                     ssl=True,
                 )
                 response.raise_for_status()
@@ -171,6 +170,10 @@ class ODPAmsterdam:
         """Read and validate a counted HAL page from the parking API."""
         data = await self._request(
             PARKING_SPOT_URL,
+            headers={
+                "Accept": "application/hal+json",
+                "Accept-Crs": "EPSG:4326",
+            },
             params={
                 "_pageSize": size,
                 "page": page,
