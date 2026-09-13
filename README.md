@@ -71,8 +71,9 @@ You can use the following parameters in your request:
 
 You can use the following parameters in your request:
 
-- **limit** (default: 10) - How many results you want to retrieve.
-- **parking_type** (default: "") - Filter based on the `eType` from the geojson data.
+- **limit** (default: `None`) - Retrieve the full selection, or return at most this positive number of records.
+- **parking_type** (default: "") - Filter by the source `eType`.
+- **page_size** (keyword-only, default: 1000) - Records per request, between 1 and 1000.
 
 | Variable | Type | Description |
 | :------- | :--- | :---------- |
@@ -80,10 +81,17 @@ You can use the following parameters in your request:
 | `spot_type` | string (or None) | The type of the location (e.g. **E6a**) |
 | `spot_description` | string (or None) | The description of the location type |
 | `street` | string (or None) | The street name of the location |
-| `number` | integer (or None) | How many parking spots there are on this location |
+| `number` | integer/float (or None) | Source capacity estimate; preserves unknown, zero and fractional values |
 | `orientation` | string (or None) | The parking orientation of the location (**visgraag**, **langs** or **file**) |
-| `coordinates` | list[float] | The coordinates of the location |
+| `coordinates` | list[list[float]] | Exterior Polygon ring, in longitude/latitude order |
+| `geometry` | dict | Original GeoJSON Polygon including all rings, in WGS84 |
+| `regimes` | list[dict] | All original regimes, including times, dates, days, exceptions and remarks |
+| `version_date` | date (or None) | Dataset validity date; not a field observation or individual record update |
 </details>
+
+`locations()` returns a `ParkingLocations` result with `records`, `total_count`, `pages_fetched` and `complete`. Without a limit it retrieves the full selection; with `limit=10` it returns at most ten records. `pages_fetched` excludes the final source verification request.
+
+`complete` indicates that all records reported by the source were received, including a verified empty selection. Inconsistent pages or changing totals raise `ODPAmsterdamError`. This does not guarantee an atomic source snapshot or current parking availability; inspect `regimes` for restrictions.
 
 ## Usage
 
@@ -97,15 +105,14 @@ async def main():
     """Show example on using the ODP Amsterdam API client."""
     async with ODPAmsterdam() as client:
         # Parking locations
-        locations: list[ParkingSpot] = await client.location(
-            limit=5, parking_type="E6a"
-        )
+        locations = await client.locations(limit=5, parking_type="E6a")
 
         # Garages
-        all_garages: list[Garage] = await client.all_garages()
-        garage: Garage = await client.garage(garage_id="ID_OF_GARAGE")
+        all_garages = await client.all_garages()
+        garage = await client.garage(garage_id="ID_OF_GARAGE")
 
-        print(locations)
+        print(locations.records)
+        print(locations.total_count, locations.complete)
         print(all_garages)
         print(garage)
 

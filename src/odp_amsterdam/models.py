@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import enum
+import math
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from typing import Any
 
 from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
+from .exceptions import ODPAmsterdamError
 
 
 @dataclass
@@ -19,10 +21,13 @@ class ParkingSpot:
     spot_description: str | None
 
     street: str | None
-    number: int | None
+    number: int | float | None
     orientation: str | None
 
-    coordinates: list[float]
+    coordinates: list[list[float]]
+    geometry: dict[str, Any]
+    regimes: list[dict[str, Any]]
+    version_date: date | None
 
     @classmethod
     def from_json(cls: type[ParkingSpot], data: dict[str, Any]) -> ParkingSpot:
@@ -38,16 +43,63 @@ class ParkingSpot:
 
         """
         attr = data["properties"]
-        regimes = attr["regimes"][0]
+        regimes = attr["regimes"]
+        if not isinstance(attr["id"], str) or not attr["id"].strip():
+            msg = "Parking location has no valid source ID"
+            raise ODPAmsterdamError(msg)
+        number = attr["aantal"]
+        if number is not None and (
+            isinstance(number, bool)
+            or not isinstance(number, (int, float))
+            or not math.isfinite(number)
+        ):
+            msg = "Parking capacity must be a finite number or null"
+            raise ODPAmsterdamError(msg)
+        if not isinstance(regimes, list) or any(
+            not isinstance(regime, dict) for regime in regimes
+        ):
+            msg = "Parking regimes must be a list of objects"
+            raise ODPAmsterdamError(msg)
+        raw_date = attr.get("versiedatum")
+        try:
+            version_date = (
+                date.fromisoformat(raw_date) if raw_date is not None else None
+            )
+        except (TypeError, ValueError) as exception:
+            msg = "Parking dataset validity date must be an ISO date or null"
+            raise ODPAmsterdamError(msg) from exception
         return cls(
             spot_id=attr["id"],
             spot_type=attr["eType"] or None,
-            spot_description=regimes["eTypeDescription"] or None,
+            spot_description=(regimes[0].get("eTypeDescription") or None)
+            if regimes
+            else None,
             street=filter_unknown(attr["straatnaam"]),
-            number=int(attr["aantal"]),
+            number=number,
             orientation=filter_unknown(attr["type"]),
             coordinates=data["geometry"]["coordinates"][0],
+            geometry=data["geometry"],
+            regimes=regimes,
+            version_date=version_date,
         )
+
+
+@dataclass
+class ParkingLocations:
+    """Retrieved parking records and the source's selection total.
+
+    Completeness means all reported records were retrieved, not an atomic
+    source snapshot or verified coverage of every real parking location.
+    """
+
+    records: list[ParkingSpot]
+    total_count: int
+    pages_fetched: int
+
+    @property
+    def complete(self) -> bool:
+        """Whether the received unique records cover the reported selection."""
+        return len(self.records) == self.total_count
 
 
 class VehicleType(enum.StrEnum):

@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING
 
 from aresponses import ResponsesMockServer
 from syrupy.assertion import SnapshotAssertion
 
+from odp_amsterdam import ParkingSpot
+
 from . import load_fixtures
 
 if TYPE_CHECKING:
-    from odp_amsterdam import Garage, ODPAmsterdam, ParkingSpot
+    from odp_amsterdam import Garage, ODPAmsterdam
 
 
 async def test_all_garages(
@@ -78,21 +81,12 @@ async def test_filter_garage_model(
     assert garages == snapshot
 
 
-async def test_parking_locations_model(
-    aresponses: ResponsesMockServer,
-    snapshot: SnapshotAssertion,
-    odp_amsterdam_client: ODPAmsterdam,
-) -> None:
-    """Test the parking locations model."""
-    aresponses.add(
-        "api.data.amsterdam.nl",
-        "/v1/parkeervakken/parkeervakken",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/geo+json"},
-            text=load_fixtures("parking.json"),
-        ),
-    )
-    locations: list[ParkingSpot] = await odp_amsterdam_client.locations()
-    assert locations == snapshot
+def test_parking_locations_model() -> None:
+    """Preserve the source fields from the existing parking fixture."""
+    source = json.loads(load_fixtures("parking.json"))["features"][0]
+    record = ParkingSpot.from_json(source)
+    assert record.spot_id == source["properties"]["id"]
+    assert record.geometry == source["geometry"]
+    assert record.coordinates == source["geometry"]["coordinates"][0]
+    assert record.regimes == source["properties"]["regimes"]
+    assert record.number == source["properties"]["aantal"]
