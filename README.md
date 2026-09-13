@@ -71,8 +71,9 @@ You can use the following parameters in your request:
 
 You can use the following parameters in your request:
 
-- **limit** (default: 10) - How many results you want to retrieve.
-- **parking_type** (default: "") - Filter based on the `eType` from the geojson data.
+- **limit** (default: `None`) - Retrieve the full selection, or return at most this positive number of records.
+- **parking_type** (default: "") - Filter by the source `eType`.
+- **page_size** (keyword-only, default: 1000) - Records per request, between 1 and 1000.
 
 | Variable | Type | Description |
 | :------- | :--- | :---------- |
@@ -80,10 +81,36 @@ You can use the following parameters in your request:
 | `spot_type` | string (or None) | The type of the location (e.g. **E6a**) |
 | `spot_description` | string (or None) | The description of the location type |
 | `street` | string (or None) | The street name of the location |
-| `number` | integer (or None) | How many parking spots there are on this location |
+| `number` | integer/float (or None) | Source capacity estimate; preserves unknown, zero and fractional values |
 | `orientation` | string (or None) | The parking orientation of the location (**visgraag**, **langs** or **file**) |
-| `coordinates` | list[float] | The coordinates of the location |
+| `coordinates` | list[list[float]] | Exterior Polygon ring, in longitude/latitude order |
+| `geometry` | dict | Original GeoJSON Polygon including all rings, in WGS84 |
+| `regimes` | list[dict] | All original regimes, including times, dates, days, exceptions and remarks |
+| `version_date` | date (or None) | Dataset validity date; not a field observation or individual record update |
 </details>
+
+### Migration: parking result and default limit
+
+This is a breaking change for the next major release. `locations()` now returns `ParkingLocations`, not a list, and its default `limit=None` retrieves the complete selection. There is no separate `all_locations()` method.
+
+```python
+result = await client.locations(parking_type="E6a")
+for location in result.records:
+    print(location.spot_id, location.regimes)
+print(result.total_count, result.pages_fetched, result.complete)
+
+sample = await client.locations(limit=10, parking_type="E6a")
+```
+
+Change iteration and `len(result)` to `result.records` and `len(result.records)`. Pass `limit=10` explicitly to retain the previous small-request behavior. `number` now preserves fractional estimates instead of truncating them. `spot_description` remains a first-regime summary; use `regimes` for all restrictions. The package does not interpret whether parking is currently permitted or available.
+
+`complete` means that the unique received records match the source's reported selection total. Limited results can be incomplete. An empty source with a verified zero total is complete; deciding whether to accept an empty import belongs to the caller. Pages are ordered by source ID, checked for missing/duplicate records and changing totals, then followed by a one-record recheck of the total and first record's identity/dataset date. `pages_fetched` excludes this final verification request. A limited fetch can read the remainder of its last page but returns no more than `limit` records.
+
+Missing metadata, malformed records, inconsistent pages or changed totals raise `ODPAmsterdamError`. Network errors propagate without returning a partial result. These checks do not guarantee an atomic snapshot: equal counts and dates cannot reveal every concurrent source edit. Original geometry and regimes are available for downstream validation; full geometric validity and parking-policy interpretation remain the caller's responsibility.
+
+Amsterdam [announces API-key requirements](https://api.data.amsterdam.nl/v1/docs/generic/rest/index.html). A caller-provided `aiohttp.ClientSession` can supply the documented `X-Api-Key` default header; use that session only for Amsterdam parking requests, since default session headers also apply to other endpoints. Keep keys outside source code. See [official key usage](https://keys.api.data.amsterdam.nl/clients/v1/docs/).
+
+Offline tests do not detect a changing municipal API. A separate bounded live smoke check should verify actual retrieval when releasing or investigating a source issue; ordinary PR tests stay offline.
 
 ## Usage
 

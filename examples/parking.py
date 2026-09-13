@@ -15,16 +15,17 @@ async def main() -> None:
             parking_type="E6a",
         )
 
-        count: int = len(locations)
-        for item in locations:
+        count: int = len(locations.records)
+        for item in locations.records:
             print(item)
 
         # Count unique id's in disabled_parkings
-        unique_values: list[str] = [str(item.spot_id) for item in locations]
+        unique_values: list[str] = [str(item.spot_id) for item in locations.records]
         num_values = len(set(unique_values))
 
         print("__________________________")
-        print(f"Total locations found: {count}")
+        print(f"Locations found: {count} / {locations.total_count}")
+        print(f"Complete selection: {locations.complete}")
         print(f"Unique ID values: {num_values}")
 
 

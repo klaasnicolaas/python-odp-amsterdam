@@ -19,7 +19,7 @@ from .exceptions import (
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
 )
-from .models import Garage, ParkingSpot
+from .models import Garage, ParkingLocations, ParkingSpot
 
 VERSION = metadata.version("odp-amsterdam")
 
@@ -69,6 +69,10 @@ class ODPAmsterdam:
             "User-Agent": f"PythonODPAmsterdam/{VERSION}",
         }
 
+        if full_url == URL(PARKING_SPOT_URL):
+            headers["Accept-Crs"] = "EPSG:4326"
+            headers["Accept"] = "application/hal+json"
+
         if self.session is None:
             self.session = ClientSession()
             self._close_session = True
@@ -90,7 +94,12 @@ class ODPAmsterdam:
             msg = "Error occurred while communicating with the Open Data Platform API."
             raise ODPAmsterdamConnectionError(msg) from exception
 
-        types = ["application/json", "text/plain", "application/geo+json"]
+        types = [
+            "application/json",
+            "application/hal+json",
+            "text/plain",
+            "application/geo+json",
+        ]
         content_type = response.headers.get("Content-Type", "")
         if not any(item in content_type for item in types):
             text = await response.text()
@@ -104,26 +113,100 @@ class ODPAmsterdam:
 
     async def locations(
         self,
-        limit: int = 10,
+        limit: int | None = None,
         parking_type: str = "",
-    ) -> list[ParkingSpot]:
-        """Get all the parking locations.
+        *,
+        page_size: int = 1000,
+    ) -> ParkingLocations:
+        """Retrieve parking records, optionally capped by limit.
 
-        Args:
-        ----
-            limit: The number of results to return.
-            parking_type: The selected parking type number.
-
-        Returns:
-        -------
-            A list of ParkingSpot objects.
-
+        Return records, source total and pages fetched. Inconsistent pages,
+        duplicate IDs and changed totals raise ODPAmsterdamError; no partial
+        success is returned. A finite limit may return complete=False.
         """
-        locations = await self._request(
+        if limit is not None and (type(limit) is not int or limit < 1):
+            msg = "limit must be a positive integer or None"
+            raise ValueError(msg)
+        if type(page_size) is not int or not 1 <= page_size <= 1000:
+            msg = "page_size must be an integer between 1 and 1000"
+            raise ValueError(msg)
+        size = min(page_size, limit) if limit is not None else page_size
+        records: list[ParkingSpot] = []
+        identifiers: set[str] = set()
+        total: int | None = None
+        page = 1
+        while True:
+            rows, reported_total = await self._location_page(parking_type, page, size)
+            if total is not None and reported_total != total:
+                msg = "Parking source total changed during retrieval"
+                raise ODPAmsterdamError(msg)
+            total = reported_total
+            for record in rows:
+                if record.spot_id in identifiers:
+                    msg = "Duplicate parking source ID during retrieval"
+                    raise ODPAmsterdamError(msg)
+                identifiers.add(record.spot_id)
+                records.append(record)
+            target = min(total, limit) if limit is not None else total
+            if len(records) >= target:
+                break
+            page += 1
+
+        # Recheck the selection after the last page, including a limited fetch.
+        latest, latest_total = await self._location_page(parking_type, 1, 1)
+        if latest_total != total or (
+            records
+            and (
+                latest[0].spot_id != records[0].spot_id
+                or latest[0].version_date != records[0].version_date
+            )
+        ):
+            msg = "Parking source changed during retrieval"
+            raise ODPAmsterdamError(msg)
+        return ParkingLocations(records[:target], total, page)
+
+    async def _location_page(
+        self, parking_type: str, page: int, size: int
+    ) -> tuple[list[ParkingSpot], int]:
+        """Read and validate a counted HAL page from the parking API."""
+        data = await self._request(
             PARKING_SPOT_URL,
-            params={"_pageSize": limit, "eType": parking_type, "_format": "geojson"},
+            params={
+                "_pageSize": size,
+                "page": page,
+                "eType": parking_type,
+                "_count": "true",
+                "_format": "json",
+                "_sort": "id",
+            },
         )
-        return [ParkingSpot.from_json(item) for item in locations["features"]]
+        try:
+            info = data["page"]
+            total = info["totalElements"]
+            rows = data["_embedded"]["parkeervakken"]
+            if (
+                type(total) is not int
+                or total < 0
+                or info["number"] != page
+                or info["size"] != size
+                or not isinstance(rows, list)
+                or len(rows) != min(size, max(0, total - (page - 1) * size))
+                or bool(data["_links"].get("next")) != (page * size < total)
+            ):
+                msg = "Invalid or incomplete parking page metadata"
+                raise ODPAmsterdamError(msg)
+        except (KeyError, TypeError, ValueError) as exception:
+            msg = "Invalid or incomplete parking page metadata"
+            raise ODPAmsterdamError(msg) from exception
+        try:
+            records = [
+                ParkingSpot.from_json({"properties": row, "geometry": row["geometry"]})
+                for row in rows
+            ]
+        except (KeyError, TypeError, ValueError, IndexError) as exception:
+            msg = "Invalid parking record in source response"
+            raise ODPAmsterdamError(msg) from exception
+        return records, total
 
     async def all_garages(
         self,
