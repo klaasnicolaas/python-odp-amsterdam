@@ -145,24 +145,22 @@ By clicking the button below you immediately start a Dev Container in Visual Stu
 
 [![Open in Dev Containers][devcontainer-shield]][devcontainer]
 
-This Python project relies on [Poetry][poetry] as its dependency manager,
-providing comprehensive management and control over project dependencies.
+This project uses [uv][uv] to manage dependencies and the development environment.
 
 You need at least:
 
 - Python 3.12+
-- [Poetry][poetry-install]
+- [uv][uv-install]
 
 ### Installation
 
 Install all packages, including all development requirements:
 
 ```bash
-poetry install
+uv sync --locked
 ```
 
-_Poetry creates by default an virtual environment where it installs all
-necessary pip packages_.
+uv installs the locked dependencies into `.venv`.
 
 ### Prek
 
@@ -170,13 +168,13 @@ This repository uses the [prek][prek] framework, all changes
 are linted and tested with each commit. To setup the prek check, run:
 
 ```bash
-poetry run prek install
+uv run prek install
 ```
 
 And to run all checks and tests manually, use the following command:
 
 ```bash
-poetry run prek run --all-files
+uv run prek run --all-files
 ```
 
 ### Testing
@@ -184,13 +182,13 @@ poetry run prek run --all-files
 It uses [pytest](https://docs.pytest.org/en/stable/) as the test framework. To run the tests:
 
 ```bash
-poetry run pytest
+uv run pytest
 ```
 
 To update the [syrupy](https://github.com/tophat/syrupy) snapshot tests:
 
 ```bash
-poetry run pytest --snapshot-update
+uv run pytest --snapshot-update
 ```
 
 ## License
@@ -244,8 +242,8 @@ SOFTWARE.
 [releases-shield]: https://img.shields.io/github/release/klaasnicolaas/python-odp-amsterdam.svg
 [releases]: https://github.com/klaasnicolaas/python-odp-amsterdam/releases
 
-[poetry-install]: https://python-poetry.org/docs/#installation
-[poetry]: https://python-poetry.org
+[uv-install]: https://docs.astral.sh/uv/getting-started/installation/
+[uv]: https://docs.astral.sh/uv/
 [prek]: https://github.com/j178/prek
 [scorecard-shield]: https://api.scorecard.dev/projects/github.com/klaasnicolaas/python-odp-amsterdam/badge
 [scorecard-url]: https://scorecard.dev/viewer/?uri=github.com/klaasnicolaas/python-odp-amsterdam
