@@ -297,9 +297,13 @@ def correct_name(name: str) -> str:
     )
     name = re.sub(r"\s*\(opendata\)\s*$", "", name, flags=re.IGNORECASE)
     name = " ".join(name.split())
-    duplicate_number = re.fullmatch(r"P(\d+) (.+ P(\d+))", name)
-    if duplicate_number and int(duplicate_number[1]) == int(duplicate_number[3]):
-        name = duplicate_number[2]
+    trailing_number = re.fullmatch(r"(.+) (P(\d+))", name)
+    if trailing_number:
+        prefix = re.fullmatch(r"P(\d+) (.+)", trailing_number[1])
+        if prefix is None:
+            name = f"{trailing_number[2]} {trailing_number[1]}"
+        elif int(prefix[1]) == int(trailing_number[3]):
+            name = f"{trailing_number[2]} {prefix[2]}"
     if category == GarageCategory.PARK_AND_RIDE and "P+R" not in name:
         return f"P+R {name}"
     return name
