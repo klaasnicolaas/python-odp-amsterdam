@@ -5,15 +5,17 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING
 
+import pytest
 from aresponses import ResponsesMockServer
 from syrupy.assertion import SnapshotAssertion
 
 from odp_amsterdam import ParkingSpot
+from odp_amsterdam.models import Garage, VehicleType
 
 from . import load_fixtures
 
 if TYPE_CHECKING:
-    from odp_amsterdam import Garage, ODPAmsterdam
+    from odp_amsterdam import ODPAmsterdam
 
 
 async def test_all_garages(
@@ -90,3 +92,33 @@ def test_parking_locations_model() -> None:
     assert record.coordinates == source["geometry"]["coordinates"][0]
     assert record.regimes == source["properties"]["regimes"]
     assert record.number == source["properties"]["aantal"]
+
+
+@pytest.mark.parametrize(
+    "coordinates",
+    [[52.362386365926604, 4.883357405662521], [4.883357405662521, 52.362386365926604]],
+)
+@pytest.mark.parametrize("name", ["FP-012_ Leidseplein ", "CE-FP09 De Munt"])
+def test_current_and_legacy_garage_source_mapping(
+    coordinates: list[float],
+    name: str,
+) -> None:
+    """Handle the current provider axis order and bicycle prefixes."""
+    source = json.loads(load_fixtures("garages.json"))["features"][0]
+    source["geometry"]["coordinates"] = coordinates
+    source["properties"]["Name"] = name
+    garage = Garage.from_json(source)
+    assert garage.latitude == 52.362386365926604
+    assert garage.longitude == 4.883357405662521
+    assert garage.vehicle == VehicleType.BICYCLE
+
+
+@pytest.mark.parametrize(
+    "coordinates", [[0, 0], [52.3], [True, 4.9], [52.3, float("nan")]]
+)
+def test_invalid_garage_coordinates_are_not_guessed(coordinates: list[float]) -> None:
+    """Fail on malformed or geographically ambiguous provider coordinates."""
+    source = json.loads(load_fixtures("garages.json"))["features"][0]
+    source["geometry"]["coordinates"] = coordinates
+    with pytest.raises(ValueError, match="coordinates"):
+        Garage.from_json(source)

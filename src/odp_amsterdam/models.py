@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import enum
+import json
 import math
+import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
@@ -150,7 +152,9 @@ class Garage:
             An Garage object.
 
         """
-        latitude, longitude = split_coordinates(str(data["geometry"]["coordinates"]))
+        latitude, longitude = split_coordinates(
+            json.dumps(data["geometry"]["coordinates"])
+        )
         attr = data["properties"]
         return cls(
             garage_id=data["Id"],
@@ -187,10 +191,27 @@ def split_coordinates(data: str) -> tuple[float, float]:
         The coordinates.
 
     """
-    longitude, latitude = data.split(", ")
-    longitude = longitude.replace("[", "")
-    latitude = latitude.replace("]", "")
-    return float(latitude), float(longitude)
+    coordinates = json.loads(data)
+    if (
+        not isinstance(coordinates, list)
+        or len(coordinates) != 2
+        or any(
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            for value in coordinates
+        )
+    ):
+        msg = "Invalid garage coordinates"
+        raise ValueError(msg)
+    first, second = coordinates
+    # The provider has used both axis orders; Dutch bounds disambiguate them.
+    if 50 <= first <= 54 and 3 <= second <= 8:
+        return float(first), float(second)
+    if 3 <= first <= 8 and 50 <= second <= 54:
+        return float(second), float(first)
+    msg = "Garage coordinates are outside the source region"
+    raise ValueError(msg)
 
 
 def parse_int(data: str) -> int | None:
@@ -248,7 +269,7 @@ def get_vehicle_type(name: str) -> VehicleType:
         The vehicle type.
 
     """
-    if "-FP" in name:
+    if re.search(r"(?:^|[-_ ])FP(?:[-_ ]|\d)", name):
         return VehicleType.BICYCLE
     if "PT" in name:
         return VehicleType.TOURINGCAR
