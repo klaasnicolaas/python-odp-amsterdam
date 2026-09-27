@@ -10,7 +10,7 @@ from aresponses import ResponsesMockServer
 from syrupy.assertion import SnapshotAssertion
 
 from odp_amsterdam import ParkingSpot
-from odp_amsterdam.models import Garage, VehicleType
+from odp_amsterdam.models import Garage, GarageCategory, VehicleType
 
 from . import load_fixtures
 
@@ -122,3 +122,44 @@ def test_invalid_garage_coordinates_are_not_guessed(coordinates: list[float]) ->
     source["geometry"]["coordinates"] = coordinates
     with pytest.raises(ValueError, match="coordinates"):
         Garage.from_json(source)
+
+
+@pytest.mark.parametrize(
+    ("source_name", "name", "category"),
+    [
+        ("P-106_ Byzantium (opendata)", "Byzantium", GarageCategory.GARAGE),
+        (
+            "P-223_ Amsterdamse Poort P23 (opendata)",
+            "Amsterdamse Poort P23",
+            GarageCategory.GARAGE,
+        ),
+        ("P-204_ P4 Villa Arena", "P4 Villa Arena", GarageCategory.GARAGE),
+        ("P-201_ P1 ArenA", "P1 ArenA", GarageCategory.GARAGE),
+        ("PR-004_ Zeeburg 2", "P+R Zeeburg 2", GarageCategory.PARK_AND_RIDE),
+        (
+            "PR-002_ Olympisch Stadion P+R",
+            "Olympisch Stadion P+R",
+            GarageCategory.PARK_AND_RIDE,
+        ),
+        ("P-302_ VUmc (ACTA)", "VUmc (ACTA)", GarageCategory.GARAGE),
+        ("CE-P30 Heinekenplein", "P30 Heinekenplein", GarageCategory.GARAGE),
+        (
+            "  PR-008_  Bos en Lommer (opendata)  ",
+            "P+R Bos en Lommer",
+            GarageCategory.PARK_AND_RIDE,
+        ),
+    ],
+)
+def test_readable_garage_names_keep_meaningful_identifiers(
+    source_name: str,
+    name: str,
+    category: GarageCategory,
+) -> None:
+    """Remove transport labels while retaining facility numbers and provenance."""
+    source = json.loads(load_fixtures("garages.json"))["features"][0]
+    source["properties"]["Name"] = source_name
+    garage = Garage.from_json(source)
+    assert garage.garage_name == name
+    assert garage.category == category
+    assert garage.source_name == source_name
+    assert garage.garage_id == source["Id"]

@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from typing import Any
 
-from .const import CORRECTIONS, FILTER_NAMES, FILTER_UNKNOWN
+from .const import FILTER_UNKNOWN
 from .exceptions import ODPAmsterdamError
 
 
@@ -138,6 +138,7 @@ class Garage:
     longitude: float
     latitude: float
     updated_at: datetime
+    source_name: str | None = None
 
     @classmethod
     def from_json(cls: type[Garage], data: dict[str, Any]) -> Garage:
@@ -159,6 +160,7 @@ class Garage:
         return cls(
             garage_id=data["Id"],
             garage_name=correct_name(attr["Name"]),
+            source_name=attr["Name"],
             vehicle=get_vehicle_type(attr["Name"]),
             category=get_category(attr["Name"]),
             state=attr.get("State"),
@@ -252,7 +254,7 @@ def get_category(name: str) -> GarageCategory:
         The category name.
 
     """
-    if "P+R" in name:
+    if "P+R" in name or re.match(r"PR-\d+_", name.strip()):
         return GarageCategory.PARK_AND_RIDE
     return GarageCategory.GARAGE
 
@@ -288,21 +290,15 @@ def correct_name(name: str) -> str:
         The corrected name.
 
     """
-    for value in FILTER_NAMES:
-        # Remove parts from name string.
-        name = name.replace(value, "")
-
-    if "PR" in name:
-        # Replace PR for P in name string.
-        name = name.replace("PR", "P")
-
-    if "FP-" in name:
-        # Replace FP- for FP in name string.
-        name = name.replace("FP-", "FP")
-
-    if any(y in name for y in CORRECTIONS):
-        # Add a 0 for consistency. (e.g. P3 -> P03)
-        return name[:1] + "0" + name[1:]
+    category = get_category(name)
+    name = re.sub(r"^(?:P|PR|FP|PT)-\d+_\s*", "", name.strip())
+    name = re.sub(
+        r"^(?:CE-|ZD-|ZO-|ZU-|DP-|AM-|FJ212P34 |VRN-FJ212|GRV020HNK )", "", name
+    )
+    name = re.sub(r"\s*\(opendata\)\s*$", "", name, flags=re.IGNORECASE)
+    name = " ".join(name.split())
+    if category == GarageCategory.PARK_AND_RIDE and "P+R" not in name:
+        return f"P+R {name}"
     return name
 
 
