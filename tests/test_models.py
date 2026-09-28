@@ -10,7 +10,7 @@ from aresponses import ResponsesMockServer
 from syrupy.assertion import SnapshotAssertion
 
 from odp_amsterdam import ParkingSpot
-from odp_amsterdam.models import Garage, GarageCategory, VehicleType
+from odp_amsterdam.models import Garage, GarageCategory, GarageStatus, VehicleType
 
 from . import load_fixtures
 
@@ -111,6 +111,28 @@ def test_current_and_legacy_garage_source_mapping(
     assert garage.latitude == 52.362386365926604
     assert garage.longitude == 4.883357405662521
     assert garage.vehicle == VehicleType.BICYCLE
+
+
+@pytest.mark.parametrize(
+    ("source_status", "status"),
+    [
+        ("GETAL", GarageStatus.COUNTING),
+        ("VRIJ", GarageStatus.OPEN),
+        ("VOL", GarageStatus.FULL),
+        ("GESLOTEN", GarageStatus.CLOSED),
+        ("STORING_DEFAULT", GarageStatus.MALFUNCTION),
+        ("ONBEKEND", None),
+        (None, None),
+    ],
+)
+def test_garage_status_separates_closed_from_full(
+    source_status: str | None,
+    status: GarageStatus | None,
+) -> None:
+    """Map the operator status; unknown values stay unknown instead of failing."""
+    source = json.loads(load_fixtures("garages.json"))["features"][0]
+    source["properties"]["Status"] = source_status
+    assert Garage.from_json(source).status == status
 
 
 @pytest.mark.parametrize(
