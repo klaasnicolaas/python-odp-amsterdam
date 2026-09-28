@@ -119,6 +119,29 @@ class GarageCategory(enum.StrEnum):
     PARK_AND_RIDE = "park_and_ride"
 
 
+class GarageStatus(enum.StrEnum):
+    """What the operator reports, next to the free space count.
+
+    Some P+R sites only report open or full without counts, and a closed
+    facility reports zero free spaces, so zero alone does not mean full.
+    """
+
+    COUNTING = "counting"
+    OPEN = "open"
+    FULL = "full"
+    CLOSED = "closed"
+    MALFUNCTION = "malfunction"
+
+
+GARAGE_STATUSES = {
+    "GETAL": GarageStatus.COUNTING,
+    "VRIJ": GarageStatus.OPEN,
+    "VOL": GarageStatus.FULL,
+    "GESLOTEN": GarageStatus.CLOSED,
+    "STORING_DEFAULT": GarageStatus.MALFUNCTION,
+}
+
+
 @dataclass
 class Garage:
     """Object representing an Garage model response from the API."""
@@ -139,6 +162,7 @@ class Garage:
     latitude: float
     updated_at: datetime
     source_name: str | None = None
+    status: GarageStatus | None = None
 
     @classmethod
     def from_json(cls: type[Garage], data: dict[str, Any]) -> Garage:
@@ -164,6 +188,8 @@ class Garage:
             vehicle=get_vehicle_type(attr["Name"]),
             category=get_category(attr["Name"]),
             state=attr.get("State"),
+            # Unknown future values stay None instead of failing the whole feed.
+            status=GARAGE_STATUSES.get(attr.get("Status")),
             free_space_short=parse_int(attr["FreeSpaceShort"]),
             free_space_long=parse_int(attr["FreeSpaceLong"]),
             short_capacity=parse_int(attr["ShortCapacity"]),
