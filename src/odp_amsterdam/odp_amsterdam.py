@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import socket
+from copy import deepcopy
 from dataclasses import dataclass
 from importlib import metadata
 from typing import Any, Self
@@ -19,7 +20,7 @@ from .exceptions import (
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
 )
-from .models import Garage, ParkingLocations, ParkingSpot
+from .models import Garage, ParkingLocations, ParkingSnapshot, ParkingSpot
 
 VERSION = metadata.version("odp-amsterdam")
 
@@ -109,6 +110,37 @@ class ODPAmsterdam:
             )
 
         return json.loads(await response.text())
+
+    async def parking_snapshot(
+        self,
+        parking_type: str = "",
+        *,
+        max_records: int = 10000,
+    ) -> ParkingSnapshot:
+        """Retrieve the complete selection or fail without a partial result.
+
+        max_records is a safety bound, not a truncation limit. The source's
+        total and first record are rechecked, but no dataset-wide revision is
+        available to prove atomicity; source_version therefore remains None.
+        """
+        if (
+            isinstance(max_records, bool)
+            or not isinstance(max_records, int)
+            or max_records < 1
+        ):
+            msg = "max_records must be a positive integer"
+            raise ValueError(msg)
+        locations = await self.locations(
+            limit=max_records + 1, parking_type=parking_type
+        )
+        if locations.total_count > max_records:
+            msg = "Parking selection exceeds max_records"
+            raise ODPAmsterdamResultsError(msg)
+        return ParkingSnapshot(
+            records=locations.records,
+            total_count=locations.total_count,
+            pages_fetched=locations.pages_fetched,
+        )
 
     async def locations(
         self,
@@ -215,6 +247,8 @@ class ODPAmsterdam:
         except (KeyError, TypeError, ValueError, IndexError) as exception:
             msg = "Invalid parking record in source response"
             raise ODPAmsterdamError(msg) from exception
+        for record, row in zip(records, rows, strict=True):
+            record.source_attributes = deepcopy(row)
         return records, total
 
     async def all_garages(

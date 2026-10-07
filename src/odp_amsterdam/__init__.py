@@ -10,6 +10,7 @@ from .models import (
     GarageCategory,
     GarageStatus,
     ParkingLocations,
+    ParkingSnapshot,
     ParkingSpot,
     VehicleType,
 )
@@ -24,6 +25,7 @@ __all__ = [
     "ODPAmsterdamError",
     "ODPAmsterdamResultsError",
     "ParkingLocations",
+    "ParkingSnapshot",
     "ParkingSpot",
     "VehicleType",
 ]
