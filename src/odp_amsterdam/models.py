@@ -6,7 +6,8 @@ import enum
 import json
 import math
 import re
-from dataclasses import dataclass
+from copy import deepcopy
+from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from typing import Any
 
@@ -30,6 +31,7 @@ class ParkingSpot:
     geometry: dict[str, Any]
     regimes: list[dict[str, Any]]
     version_date: date | None
+    source_attributes: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_json(cls: type[ParkingSpot], data: dict[str, Any]) -> ParkingSpot:
@@ -83,6 +85,7 @@ class ParkingSpot:
             geometry=data["geometry"],
             regimes=regimes,
             version_date=version_date,
+            source_attributes=deepcopy(data),
         )
 
 
@@ -102,6 +105,21 @@ class ParkingLocations:
     def complete(self) -> bool:
         """Whether the received unique records cover the reported selection."""
         return len(self.records) == self.total_count
+
+
+@dataclass
+class ParkingCollection:
+    """Complete selection, without claiming an atomic source revision.
+
+    Amsterdam exposes no verified dataset-wide version; source_version is None.
+    pages_fetched counts data pages, excluding the final verification request.
+    """
+
+    records: list[ParkingSpot]
+    total_count: int
+    pages_fetched: int
+    source_version: str | None = None
+    complete: bool = True
 
 
 class VehicleType(enum.StrEnum):

@@ -13,7 +13,12 @@ import pytest
 from aiohttp.web import Request
 from aresponses import Response, ResponsesMockServer
 
-from odp_amsterdam import ODPAmsterdam, ODPAmsterdamError, ParkingSpot
+from odp_amsterdam import (
+    ODPAmsterdam,
+    ODPAmsterdamError,
+    ODPAmsterdamResultsError,
+    ParkingSpot,
+)
 
 from . import load_fixtures
 
@@ -293,3 +298,75 @@ async def test_integer_subclass_bounds() -> None:
         result = await ODPAmsterdam().locations(limit=Count.ONE, page_size=Count.ONE)
     assert [record.spot_id for record in result.records] == ["001"]
     assert result.complete
+
+
+async def test_complete_parking_collection() -> None:
+    """The uniform API retains raw source records and reports unknown revision."""
+    payload = page(["0001"], 1, size=1000)
+    row = payload["_embedded"]["parkeervakken"][0]
+    row["future_source_field"] = {"meaning": "uninterpreted"}
+    with patch.object(
+        ODPAmsterdam,
+        "_request",
+        new=AsyncMock(side_effect=[payload, page(["0001"], 1, size=1)]),
+    ):
+        result = await ODPAmsterdam().parking_collection(parking_type="E6a")
+    assert (result.total_count, result.pages_fetched, result.complete) == (1, 1, True)
+    assert result.source_version is None
+    assert result.records[0].source_attributes == row
+
+
+async def test_collection_limit_is_not_truncation() -> None:
+    """A capped selection must fail rather than yield a smaller successful feed."""
+    with (
+        patch.object(
+            ODPAmsterdam,
+            "_request",
+            new=AsyncMock(side_effect=[page(["1", "2"], 3), page(["1"], 3, size=1)]),
+        ) as request,
+        pytest.raises(ODPAmsterdamResultsError, match="exceeds max_records"),
+    ):
+        await ODPAmsterdam().parking_collection(max_records=1)
+    assert request.call_count == 2
+
+
+@pytest.mark.parametrize("max_records", [0, -1, True, 1.5, "10"])
+async def test_invalid_collection_bound(max_records: Any) -> None:
+    """Reject invalid safety bounds before making a source request."""
+    with pytest.raises(ValueError, match="max_records"):
+        await ODPAmsterdam().parking_collection(max_records=max_records)
+
+
+async def test_empty_parking_collection() -> None:
+    """A verified empty selection remains a complete collection."""
+    with patch.object(
+        ODPAmsterdam,
+        "_request",
+        new=AsyncMock(side_effect=[page([], 0, size=1000), page([], 0, size=1)]),
+    ):
+        result = await ODPAmsterdam().parking_collection()
+    assert result.records == []
+    assert result.total_count == 0
+    assert result.complete
+
+
+async def test_collection_accepts_exact_safety_bound() -> None:
+    """The safety bound includes a selection with exactly that many records."""
+    with patch.object(
+        ODPAmsterdam,
+        "_request",
+        new=AsyncMock(side_effect=[page(["1"], 1, size=2), page(["1"], 1, size=1)]),
+    ):
+        result = await ODPAmsterdam().parking_collection(max_records=1)
+    assert result.total_count == 1
+    assert result.complete
+
+
+async def test_collection_propagates_invalid_pages() -> None:
+    """The complete API retains the established pagination failure contract."""
+    payload = page(["1"], 2, size=1000)
+    with (
+        patch.object(ODPAmsterdam, "_request", new=AsyncMock(return_value=payload)),
+        pytest.raises(ODPAmsterdamError, match="incomplete"),
+    ):
+        await ODPAmsterdam().parking_collection()
