@@ -108,7 +108,7 @@ class ParkingLocations:
 
 
 @dataclass
-class ParkingSnapshot:
+class ParkingCollection:
     """Complete selection, without claiming an atomic source revision.
 
     Amsterdam exposes no verified dataset-wide version; source_version is None.

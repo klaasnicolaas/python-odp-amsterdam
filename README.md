@@ -93,7 +93,7 @@ You can use the following parameters in your request:
 
 `complete` indicates that all records reported by the source were received, including a verified empty selection. Inconsistent pages or changing totals raise `ODPAmsterdamError`. This does not guarantee an atomic source snapshot or current parking availability; inspect `regimes` for restrictions.
 
-For complete deliveries, use `await client.parking_snapshot(parking_type="E6a", max_records=10000)`. It returns the uniform `ParkingSnapshot` contract:
+For complete deliveries, use `await client.parking_collection(parking_type="E6a", max_records=10000)`. It returns the uniform `ParkingCollection` contract:
 
 | Field | Meaning |
 | --- | --- |

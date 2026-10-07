@@ -20,7 +20,7 @@ from .exceptions import (
     ODPAmsterdamError,
     ODPAmsterdamResultsError,
 )
-from .models import Garage, ParkingLocations, ParkingSnapshot, ParkingSpot
+from .models import Garage, ParkingCollection, ParkingLocations, ParkingSpot
 
 VERSION = metadata.version("odp-amsterdam")
 
@@ -111,12 +111,12 @@ class ODPAmsterdam:
 
         return json.loads(await response.text())
 
-    async def parking_snapshot(
+    async def parking_collection(
         self,
         parking_type: str = "",
         *,
         max_records: int = 10000,
-    ) -> ParkingSnapshot:
+    ) -> ParkingCollection:
         """Retrieve the complete selection or fail without a partial result.
 
         max_records is a safety bound, not a truncation limit. The source's
@@ -136,7 +136,7 @@ class ODPAmsterdam:
         if locations.total_count > max_records:
             msg = "Parking selection exceeds max_records"
             raise ODPAmsterdamResultsError(msg)
-        return ParkingSnapshot(
+        return ParkingCollection(
             records=locations.records,
             total_count=locations.total_count,
             pages_fetched=locations.pages_fetched,
