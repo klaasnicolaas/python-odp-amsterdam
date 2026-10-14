@@ -179,10 +179,10 @@ class ODPAmsterdam:
                 raise ODPAmsterdamError(msg)
             total = reported_total
             for record in rows:
-                if record.spot_id in identifiers:
+                if record.id in identifiers:
                     msg = "Duplicate parking source ID during retrieval"
                     raise ODPAmsterdamError(msg)
-                identifiers.add(record.spot_id)
+                identifiers.add(record.id)
                 records.append(record)
             target = min(total, limit) if limit is not None else total
             if len(records) >= target:
@@ -194,7 +194,7 @@ class ODPAmsterdam:
         if latest_total != total or (
             records
             and (
-                latest[0].spot_id != records[0].spot_id
+                latest[0].id != records[0].id
                 or latest[0].version_date != records[0].version_date
             )
         ):

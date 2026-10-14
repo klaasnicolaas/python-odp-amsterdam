@@ -19,7 +19,7 @@ from .exceptions import ODPAmsterdamError
 class ParkingSpot:
     """Object representing an ParkingSpot model response from the API."""
 
-    spot_id: str
+    id: str
     spot_type: str | None
     spot_description: str | None
 
@@ -73,7 +73,7 @@ class ParkingSpot:
             msg = "Parking dataset validity date must be an ISO date or null"
             raise ODPAmsterdamError(msg) from exception
         return cls(
-            spot_id=attr["id"],
+            id=attr["id"],
             spot_type=attr["eType"] or None,
             spot_description=(regimes[0].get("eTypeDescription") or None)
             if regimes

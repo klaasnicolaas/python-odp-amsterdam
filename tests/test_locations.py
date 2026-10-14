@@ -66,7 +66,7 @@ async def test_paginated_locations(aresponses: ResponsesMockServer) -> None:
     )
     async with ODPAmsterdam() as client:
         result = await client.locations(parking_type="E6a", page_size=2)
-    assert [record.spot_id for record in result.records] == ["001", "002", "003"]
+    assert [record.id for record in result.records] == ["001", "002", "003"]
     assert (result.total_count, result.pages_fetched, result.complete) == (3, 2, True)
     assert [query["page"] for query in queries] == ["1", "2", "1"]
     assert [query["_pageSize"] for query in queries] == ["2", "2", "1"]
@@ -109,7 +109,7 @@ async def test_limit_crosses_page_boundary() -> None:
         ),
     ):
         result = await ODPAmsterdam().locations(limit=3, page_size=2)
-    assert [record.spot_id for record in result.records] == ["1", "2", "3"]
+    assert [record.id for record in result.records] == ["1", "2", "3"]
     assert not result.complete
 
 
@@ -241,7 +241,7 @@ def test_regimes_geometry_and_dates() -> None:
         [[4.8, 52.3], [4.81, 52.3], [4.81, 52.31], [4.8, 52.3]]
     )
     result = ParkingSpot.from_json(source)
-    assert result.spot_id == "000123"
+    assert result.id == "000123"
     assert result.regimes == source["properties"]["regimes"]
     assert result.geometry == source["geometry"]
     assert result.version_date == date(2026, 9, 11)
@@ -296,7 +296,7 @@ async def test_integer_subclass_bounds() -> None:
         new=AsyncMock(side_effect=[page(["001"], 1, size=1)] * 2),
     ):
         result = await ODPAmsterdam().locations(limit=Count.ONE, page_size=Count.ONE)
-    assert [record.spot_id for record in result.records] == ["001"]
+    assert [record.id for record in result.records] == ["001"]
     assert result.complete
 
 
