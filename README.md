@@ -77,7 +77,7 @@ You can use the following parameters in your request:
 
 | Variable | Type | Description |
 | :------- | :--- | :---------- |
-| `spot_id` | string | The id of the location |
+| `id` | string | The id of the location |
 | `spot_type` | string (or None) | The type of the location (e.g. **E6a**) |
 | `spot_description` | string (or None) | The description of the location type |
 | `street` | string (or None) | The street name of the location |
@@ -262,3 +262,7 @@ SOFTWARE.
 [prek]: https://github.com/j178/prek
 [scorecard-shield]: https://api.scorecard.dev/projects/github.com/klaasnicolaas/python-odp-amsterdam/badge
 [scorecard-url]: https://scorecard.dev/viewer/?uri=github.com/klaasnicolaas/python-odp-amsterdam
+
+## Record identity migration
+
+Replace `record.spot_id` with `record.id`, including constructor keywords. Garage models and garage identifiers are unchanged. The identifier value and type, selection, geometry and original source claims are preserved. This public record API change requires a major release; no compatibility alias is introduced. The field `id` is valid as a Python dataclass attribute and does not replace the builtin `id()` function.

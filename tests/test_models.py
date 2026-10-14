@@ -87,7 +87,7 @@ def test_parking_locations_model() -> None:
     """Preserve the source fields from the existing parking fixture."""
     source = json.loads(load_fixtures("parking.json"))["features"][0]
     record = ParkingSpot.from_json(source)
-    assert record.spot_id == source["properties"]["id"]
+    assert record.id == source["properties"]["id"]
     assert record.geometry == source["geometry"]
     assert record.coordinates == source["geometry"]["coordinates"][0]
     assert record.regimes == source["properties"]["regimes"]
