@@ -147,7 +147,7 @@ This project uses [uv][uv] to manage dependencies and the development environmen
 
 You need at least:
 
-- Python 3.12+
+- Python 3.13+
 - [uv][uv-install]
 
 ### Installation
